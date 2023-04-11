@@ -200,7 +200,7 @@ Note uses variable names as per lecture slides
 void collisionFreePaths()
 {
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
-    for (int i = 0; i < freeSquareCount; i++)
+    for (int i = 2; i < freeSquareCount; i++)
     {
         for (int j = i + 1; j < freeSquareCount; j++)
         {
