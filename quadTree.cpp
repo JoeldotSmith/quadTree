@@ -212,6 +212,15 @@ void collisionFreePaths()
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
     for (int i = 0; i < freeSquareCount; i++)
     {
+        for (int i = 0; i < freeSquareCount; i++){
+        if (freeSquare[i].size > 4){
+            int locx = freeSquare[i].locX;
+            int locy = freeSquare[i].locY;
+
+            printf("FreeSquare n(%i), locx = %i locy = %i\n", i, locx, locy);
+        }
+        
+    }
         for (int j = i + 1; j < 5; j++)
         {
             // for all pairs of free squares
@@ -360,7 +369,7 @@ int main()
             QuadTree(0, 0, 128);
 
             // prints the image using printf()
-             printfImage(*image);
+            //printfImage(*image);
             break;
         case KEY2:
             printf("\nExperiment 2 and 3\n---\n");
