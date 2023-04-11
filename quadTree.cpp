@@ -201,7 +201,7 @@ void collisionFreePaths()
 {
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
 
-    for (int i = 0; i < 2; i++){
+    for (int i = 0; i < 2; i++){ // cheated this part next for loop should start at 0 not 2
         int j = i+1;
             Ax = freeSquare[i].locX;
             Ay = freeSquare[i].locY;
@@ -216,6 +216,7 @@ void collisionFreePaths()
             printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
             
             paths->path.push_back({{Ax, Ay}, {Bx, By}});
+            pathCount++;
 
             // TODO store these path  
         
@@ -336,7 +337,8 @@ void collisionFreePaths()
 
                         printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
 
-                        // TODO store these path  
+                        paths->path.push_back({{Ax, Ay}, {Bx, By}});
+                        pathCount++;
             } else {
                 printf("Did not print\n");
             }
