@@ -36,7 +36,8 @@
   "C_Cpp_Runner.useAddressSanitizer": false,
   "files.associations": {
     "locale": "cpp",
-    "array": "cpp"
+    "array": "cpp",
+    "vector": "cpp"
   },
   "gitdoc.enabled": true
 }

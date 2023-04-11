@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
+using std::vector; 
 #include <array>
 
 #include "eyebot++.h"
@@ -121,7 +122,7 @@ typedef struct Path
     // What info do we need here
     // Array of points?
 
-    std::vector<std::vector<std::vector<int> > > path; // < <ax, ay>, <bx, by> >
+    vector<vector<vector<int> > > path; // { {ax, ay}, {bx, by} }
 
 } Path;
 
@@ -215,13 +216,25 @@ void collisionFreePaths()
 
             printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
             
-            std::vector<std::vector<int>> path = {
-                {Ax, Ay}, 
-                {Bx, By}
-            };
             
-            paths->path.push_back(path);
+            vector<vector<int> > path2d;
+            vector<int> path1da;
+            vector<int> path1db;
+            path1da.push_back(Ax);
+            path1da.push_back(Ay);
+            path1db.push_back(Bx);
+            path1db.push_back(By);
+
+            path2d.push_back(path1da);
+            path2d.push_back(path1db);
+
+            //paths->path.push_back(path2d);
+
             pathCount++;
+
+            
+            
+            
 
             // TODO store these path  
         
@@ -341,9 +354,21 @@ void collisionFreePaths()
                         int distance = sqrt(pow(Ax-Bx, 2)+pow(Ay-By, 2));
 
                         printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
+                        
+                        // vector<vector<int> > path2d;
+                        // vector<int> path1da;
+                        // vector<int> path1db;
+                        // path1da.push_back(Ax);
+                        // path1da.push_back(Ay);
+                        // path1db.push_back(Bx);
+                        // path1db.push_back(By);
 
-                        paths->path.push_back({{Ax, Ay}, {Bx, By}});
-                        pathCount++;
+                        // path2d.push_back(path1da);
+                        // path2d.push_back(path1db);
+
+                        // paths->path.push_back(path2d);
+
+            pathCount++;
             } else {
                 printf("Did not print\n");
             }
