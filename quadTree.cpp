@@ -121,7 +121,7 @@ typedef struct Path
     // What info do we need here
     // Array of points?
 
-    std::vector<std::array<int, 2> > path;
+    std::vector<std::vector<std::array<int, 2> > > path; // < <ax, ay> <bx, by>>
 
 } Path;
 
