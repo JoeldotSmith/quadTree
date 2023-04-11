@@ -302,6 +302,7 @@ void collisionFreePaths()
             }
             if (!overOccupiedSquare){ 
                             // a collision free path can be found so draw it
+                            printf("Draw\n");
 
                             LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
 
