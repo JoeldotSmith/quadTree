@@ -263,6 +263,7 @@ void collisionFreePaths()
                 } else if (f4 != 0){
                     positiveFs++;
                 }
+                
 
                 
 
@@ -281,11 +282,17 @@ void collisionFreePaths()
                     // Get variables as needed for formula
 
                     // formula as per lecture slides
+                    printf("not negativeFs or positiveFs");
 
                     overOccupiedSquare = !((Ax > Ux && Bx > Ux) || (Ax < Rx && Bx < Rx) || (Ay > Uy && By > Uy) || (Ay < Ry && By < Ry));
+                    if (!overOccupiedSquare){
+                        printf(" --- passed\n");
+                    }
+
 
                     if (overOccupiedSquare){
                         // this is not a collision free path
+                        printf(" --- broke");
                         break;
                     }
                 }
