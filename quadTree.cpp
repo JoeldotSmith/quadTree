@@ -207,6 +207,10 @@ void collisionFreePaths()
             // for all pairs of free squares
             
             bool overOccupiedSquare = false;
+            Ax = freeSquare[i].locX;
+            Ay = freeSquare[i].locY;
+            Bx = freeSquare[j].locX;
+            By = freeSquare[j].locY;
 
             // Check all occupied squares to see if any intersect the path between two squares
 
@@ -232,10 +236,7 @@ void collisionFreePaths()
                 Ux = occupiedSquares[k].locX+occupiedSquares[k].size/2;
                 Uy = occupiedSquares[k].locY+occupiedSquares[k].size/2;
 
-                Ax = freeSquare[i].locX;
-                Ay = freeSquare[i].locY;
-                Bx = freeSquare[j].locX;
-                By = freeSquare[j].locY;
+                
 
 
                 double f1 = (By - Ay)*Rx + (Ax-Bx)*Ry + (Bx*Ay-Ax*By);
