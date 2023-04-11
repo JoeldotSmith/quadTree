@@ -286,19 +286,9 @@ void collisionFreePaths()
                     // Get variables as needed for formula
 
                     // formula as per lecture slides
-                    
 
-                    Sx = occupiedSquares[k].locX+occupiedSquares[k].size/2;
-                    Sy = occupiedSquares[k].locY-occupiedSquares[k].size/2;
-
-                    Tx = occupiedSquares[k].locX-occupiedSquares[k].size/2;
-                    Ty = occupiedSquares[k].locY+occupiedSquares[k].size/2;
-
-                   
-                    
-
-                    overOccupiedSquare = !((Ax > Sx && Bx > Sx) || (Ax < Tx && Bx < Tx) || (Ay > Sy && By > Sy) || (Ay < Ty && By < Ty));
-                    printf("Ax = %i, Ay = %i, Bx = %i, By = %i, Sx = %i, Sy = %i, Tx = %i, Ty = %i\n", Ax, Ay, Bx, By, Sx, Sy, Tx, Ty);
+                    overOccupiedSquare = !((Ax > Ux && Bx > Ux) || (Ax < Rx && Bx < Rx) || (Ay > Uy && By > Uy) || (Ay < Ry && By < Ry));
+                    printf("Ax = %i, Ay = %i, Bx = %i, By = %i, Ux = %i, Uy = %i, Rx = %i, Ry = %i\n", Ax, Ay, Bx, By, Ux, Uy, Rx, Ry);
 
                     if (overOccupiedSquare){
                         // this is not a collision free path
