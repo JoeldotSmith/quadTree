@@ -204,8 +204,6 @@ void collisionFreePaths()
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
     for (int i = 0; i < freeSquareCount; i++)
     {
-        
-    
         for (int j = i + 1; j < 15; j++)
         {
             // for all pairs of free squares
@@ -304,6 +302,7 @@ void collisionFreePaths()
 
                     if (overOccupiedSquare){
                         // this is not a collision free path
+                        printf("break--------");
                         break;
                     }
                 }
