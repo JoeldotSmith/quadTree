@@ -189,8 +189,6 @@ void QuadTree(int x, int y, int size)
         QuadTree(x, y + s2, s2);
         QuadTree(x + s2, y + s2, s2);
     }
-    
-    
 }
 
 /*
@@ -209,19 +207,13 @@ void collisionFreePaths()
             // for all pairs of free squares
             
             bool overOccupiedSquare = false;
-            Ax = freeSquare[i].locX;
-            Ay = freeSquare[i].locY;
-            Bx = freeSquare[j].locX;
-            By = freeSquare[j].locY;
-
-            printf("Ax = %i, Ay = %i, Bx = %i, By = %i\n", Ax, Ay, Bx, By);
 
             // Check all occupied squares to see if any intersect the path between two squares
 
             for (int k = 0; k < occupiedSquareCount; k++)
             {
-                if (freeSquare[i].size <= 16 || freeSquare[j].size <= 16){
-                    continue;
+                if (freeSquare[i].size <= 2 || freeSquare[j].size <= 2){
+                    break;
 
                 }
                 int negativeFs = 0;
@@ -240,7 +232,10 @@ void collisionFreePaths()
                 Ux = occupiedSquares[k].locX+occupiedSquares[k].size/2;
                 Uy = occupiedSquares[k].locY+occupiedSquares[k].size/2;
 
-                
+                Ax = freeSquare[i].locX;
+                Ay = freeSquare[i].locY;
+                Bx = freeSquare[j].locX;
+                By = freeSquare[j].locY;
 
 
                 double f1 = (By - Ay)*Rx + (Ax-Bx)*Ry + (Bx*Ay-Ax*By);
@@ -253,19 +248,16 @@ void collisionFreePaths()
                 } else if (f1 != 0){
                     positiveFs++;
                 }
-
                 if (f2 < 0){
                     negativeFs++;
                 } else if (f2 != 0){
                     positiveFs++;
                 }
-
                 if (f3 < 0){
                     negativeFs++;
                 } else if (f3 != 0){
                     positiveFs++;
                 }
-
                 if (f4 < 0){
                     negativeFs++;
                 } else if (f4 != 0){
@@ -279,6 +271,9 @@ void collisionFreePaths()
                     // All ponts above or below line
                     // no intersection, check the next occupied square
                     
+
+                    
+                    
                     continue;
                 }
                 else
@@ -288,25 +283,24 @@ void collisionFreePaths()
                     // formula as per lecture slides
 
                     overOccupiedSquare = !((Ax > Ux && Bx > Ux) || (Ax < Rx && Bx < Rx) || (Ay > Uy && By > Uy) || (Ay < Ry && By < Ry));
-                    printf("Ax = %i, Ay = %i, Bx = %i, By = %i, Ux = %i, Uy = %i, Rx = %i, Ry = %i\n", Ax, Ay, Bx, By, Ux, Uy, Rx, Ry);
 
                     if (overOccupiedSquare){
                         // this is not a collision free path
-                        printf("break--------");
                         break;
                     }
                 }
-                    
+                
             }
             if (!overOccupiedSquare){ 
-                            // a collision free path can be found so draw it
-                            LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
+                        // a collision free path can be found so draw it
 
-                            int distance = sqrt(pow(Ax-Bx, 2)+pow(Ax-Bx, 2));
+                        LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
 
-                            printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
+                        int distance = sqrt(pow(Ax-Bx, 2)+pow(Ax-Bx, 2));
 
-                            // TODO store these path  
+                        printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
+
+                        // TODO store these path  
             }
             
         }
@@ -353,7 +347,7 @@ int main()
             QuadTree(0, 0, 128);
 
             // prints the image using printf()
-            //printfImage(*image);
+             printfImage(*image);
             break;
         case KEY2:
             printf("\nExperiment 2 and 3\n---\n");
