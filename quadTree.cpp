@@ -121,7 +121,7 @@ typedef struct Path
     // What info do we need here
     // Array of points?
 
-    std::vector<std::vector<std::array<int, 2> > > path; // < <ax, ay> <bx, by>>
+    std::vector<std::vector<std::array<int, 2> > > path; // < <ax, ay>, <bx, by> >
 
 } Path;
 
@@ -214,6 +214,8 @@ void collisionFreePaths()
             int distance = sqrt(pow(Ax-Bx, 2)+pow(Ay-By, 2));
 
             printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
+            
+            paths->path.push_back({{Ax, Ay}, {Bx, By}});
 
             // TODO store these path  
         
