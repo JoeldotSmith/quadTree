@@ -248,16 +248,19 @@ void collisionFreePaths()
                 } else if (f1 != 0){
                     positiveFs++;
                 }
+
                 if (f2 < 0){
                     negativeFs++;
                 } else if (f2 != 0){
                     positiveFs++;
                 }
+
                 if (f3 < 0){
                     negativeFs++;
                 } else if (f3 != 0){
                     positiveFs++;
                 }
+                
                 if (f4 < 0){
                     negativeFs++;
                 } else if (f4 != 0){
