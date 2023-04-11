@@ -204,7 +204,7 @@ void collisionFreePaths()
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
     for (int i = 0; i < freeSquareCount; i++)
     {
-        for (int j = i + 1; j < 15; j++)
+        for (int j = i + 1; j < freeSquareCount; j++)
         {
             // for all pairs of free squares
             
@@ -220,7 +220,7 @@ void collisionFreePaths()
 
             for (int k = 0; k < occupiedSquareCount; k++)
             {
-                if (freeSquare[i].size <= 2 || freeSquare[j].size <= 2){
+                if (freeSquare[i].size <= 16 || freeSquare[j].size <= 16){
                     continue;
 
                 }
@@ -287,7 +287,7 @@ void collisionFreePaths()
 
                     // formula as per lecture slides
 
-                    overOccupiedSquare = ((Ax > Ux && Bx > Ux) || (Ax < Rx && Bx < Rx) || (Ay > Uy && By > Uy) || (Ay < Ry && By < Ry));
+                    overOccupiedSquare = !((Ax > Ux && Bx > Ux) || (Ax < Rx && Bx < Rx) || (Ay > Uy && By > Uy) || (Ay < Ry && By < Ry));
                     printf("Ax = %i, Ay = %i, Bx = %i, By = %i, Ux = %i, Uy = %i, Rx = %i, Ry = %i\n", Ax, Ay, Bx, By, Ux, Uy, Rx, Ry);
 
                     if (overOccupiedSquare){
@@ -300,8 +300,6 @@ void collisionFreePaths()
             }
             if (!overOccupiedSquare){ 
                             // a collision free path can be found so draw it
-                            printf("Draw\n");
-
                             LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
 
                             int distance = sqrt(pow(Ax-Bx, 2)+pow(Ax-Bx, 2));
