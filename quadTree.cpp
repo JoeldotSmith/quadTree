@@ -189,15 +189,7 @@ void QuadTree(int x, int y, int size)
         QuadTree(x, y + s2, s2);
         QuadTree(x + s2, y + s2, s2);
     }
-    for (int i = 0; i < freeSquareCount; i++){
-        if (freeSquare[i].size > 4){
-            int locx = freeSquare[i].locX;
-            int locy = freeSquare[i].locY;
-
-            printf("FreeSquare n(%i), locx = %i locy = %i\n", i, locx, locy);
-        }
-        
-    }
+    
     
 }
 
@@ -212,15 +204,8 @@ void collisionFreePaths()
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
     for (int i = 0; i < freeSquareCount; i++)
     {
-        for (int i = 0; i < freeSquareCount; i++){
-        if (freeSquare[i].size > 4){
-            int locx = freeSquare[i].locX;
-            int locy = freeSquare[i].locY;
-
-            printf("FreeSquare n(%i), locx = %i locy = %i\n", i, locx, locy);
-        }
         
-    }
+    
         for (int j = i + 1; j < 5; j++)
         {
             // for all pairs of free squares
@@ -230,6 +215,8 @@ void collisionFreePaths()
             Ay = freeSquare[i].locY;
             Bx = freeSquare[j].locX;
             By = freeSquare[j].locY;
+
+            printf("Ax = %i, Ay = %i, Bx = %i, By = %i\n", Ax, Ay, Bx, By);
 
             // Check all occupied squares to see if any intersect the path between two squares
 
