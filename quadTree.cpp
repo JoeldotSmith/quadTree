@@ -202,7 +202,7 @@ void collisionFreePaths()
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
     for (int i = 0; i < freeSquareCount; i++)
     {
-        for (int j = i + 1; j < freeSquareCount; j++)
+        for (int j = i + 1; j < 5; j++)
         {
             // for all pairs of free squares
             
@@ -260,7 +260,7 @@ void collisionFreePaths()
                 } else if (f3 != 0){
                     positiveFs++;
                 }
-                
+
                 if (f4 < 0){
                     negativeFs++;
                 } else if (f4 != 0){
@@ -273,9 +273,6 @@ void collisionFreePaths()
                 {
                     // All ponts above or below line
                     // no intersection, check the next occupied square
-                    
-
-                    
                     
                     continue;
                 }
