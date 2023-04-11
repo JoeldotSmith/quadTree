@@ -236,8 +236,9 @@ void collisionFreePaths()
                 Ay = freeSquare[i].locY;
                 Bx = freeSquare[j].locX;
                 By = freeSquare[j].locY;
-                int distance = sqrt(pow(Ax-Bx, 2)+pow(Ax-Bx, 2));
-                if (distance < 32){
+                int distance = sqrt(pow(Ax-Bx, 2)+pow(Ay-By, 2));
+                if (distance < 10){
+                    printf("Distance not big enough");
                     break;
                 }
 
@@ -308,9 +309,9 @@ void collisionFreePaths()
 
                         LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
 
-                        int distance = sqrt(pow(Ax-Bx, 2)+pow(Ax-Bx, 2));
+                        int distance = sqrt(pow(Ax-Bx, 2)+pow(Ay-By, 2));
 
-                        printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
+                        //printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
 
                         // TODO store these path  
             } else {
