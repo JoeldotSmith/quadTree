@@ -233,7 +233,7 @@ void collisionFreePaths()
 
             for (int k = 0; k < occupiedSquareCount; k++)
             {
-                if (freeSquare[i].size <= 2 || freeSquare[j].size <= 2){
+                if (freeSquare[i].size <= 8 || freeSquare[j].size <= 8){
                     break;
 
                 }
