@@ -206,7 +206,7 @@ void collisionFreePaths()
         {
             // for all pairs of free squares
             
-            bool overOccupiedSquare = true;
+            bool overOccupiedSquare = false;
 
             // Check all occupied squares to see if any intersect the path between two squares
 
