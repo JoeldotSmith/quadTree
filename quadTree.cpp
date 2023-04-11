@@ -237,8 +237,8 @@ void collisionFreePaths()
                 Bx = freeSquare[j].locX;
                 By = freeSquare[j].locY;
                 int distance = sqrt(pow(Ax-Bx, 2)+pow(Ay-By, 2));
-                if (distance < 10){
-                    printf("Distance not big enough");
+                if (distance > 10){
+                    printf("Distance too big\n");
                     break;
                 }
 
