@@ -200,6 +200,27 @@ Note uses variable names as per lecture slides
 void collisionFreePaths()
 {
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
+
+    for (int i = 0; i < 2; i++){
+        int j = i+1;
+            Ax = freeSquare[i].locX;
+            Ay = freeSquare[i].locY;
+            Bx = freeSquare[j].locX;
+            By = freeSquare[j].locY;
+
+
+            LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
+
+            int distance = sqrt(pow(Ax-Bx, 2)+pow(Ay-By, 2));
+
+            printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
+
+            // TODO store these path  
+        
+        
+    }
+
+
     for (int i = 2; i < freeSquareCount; i++)
     {
         for (int j = i + 1; j < freeSquareCount; j++)
@@ -311,7 +332,7 @@ void collisionFreePaths()
 
                         int distance = sqrt(pow(Ax-Bx, 2)+pow(Ay-By, 2));
 
-                        //printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
+                        printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
 
                         // TODO store these path  
             } else {
