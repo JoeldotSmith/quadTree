@@ -202,7 +202,7 @@ void collisionFreePaths()
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
     for (int i = 0; i < freeSquareCount; i++)
     {
-        for (int j = i + 1; j < 5; j++)
+        for (int j = i + 1; j < freeSquareCount; j++)
         {
             // for all pairs of free squares
             
