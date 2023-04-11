@@ -206,7 +206,7 @@ void collisionFreePaths()
         {
             // for all pairs of free squares
             
-            bool overOccupiedSquare = false;
+            bool overOccupiedSquare = true;
 
             // Check all occupied squares to see if any intersect the path between two squares
 
@@ -282,7 +282,7 @@ void collisionFreePaths()
 
                     // formula as per lecture slides
 
-                    overOccupiedSquare = !(((Ax > Sx) && (Bx > Sx)) || ((Ax < Tx) && (Bx < Tx)) || ((Ay > Sy) && (By > Sy)) || ((Ay < Ty) && (By < Ty)));
+                    overOccupiedSquare = true;//!((Ax > Sx && Bx > Sx) || (Ax < Tx && Bx < Tx) || (Ay > Sy && By > Sy) || (Ay < Ty && By < Ty));
 
                     if (overOccupiedSquare){
                         // this is not a collision free path
