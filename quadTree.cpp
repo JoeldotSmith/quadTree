@@ -236,6 +236,10 @@ void collisionFreePaths()
                 Ay = freeSquare[i].locY;
                 Bx = freeSquare[j].locX;
                 By = freeSquare[j].locY;
+                int distance = sqrt(pow(Ax-Bx, 2)+pow(Ax-Bx, 2));
+                if (distance < 32){
+                    break;
+                }
 
 
                 double f1 = (By - Ay)*Rx + (Ax-Bx)*Ry + (Bx*Ay-Ax*By);
