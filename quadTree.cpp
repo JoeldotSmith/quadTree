@@ -13,6 +13,7 @@ using std::vector;
 BYTE *image;
 char *fileName = "diagonal.pbm";
 int arr[IMAGE_SIZE][IMAGE_SIZE];
+vector<vector<vector<int> > > paths;
 #define LINE_MAX 255
 
 void read_pbm_header(FILE *file, int *width, int *height)
@@ -133,7 +134,7 @@ int occupiedSquareCount = 0;
 Square occupiedSquares[IMAGE_SIZE];
 
 int pathCount = 0;
-Path *paths;
+// Path *paths;
 
 /*
 Performs recursive quadtree division of image
@@ -228,7 +229,7 @@ void collisionFreePaths()
             path2d.push_back(path1da);
             path2d.push_back(path1db);
 
-            //paths->path.push_back(path2d);
+            paths.push_back(path2d);
 
             pathCount++;
 
@@ -355,20 +356,23 @@ void collisionFreePaths()
 
                         printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
                         
-                        // vector<vector<int> > path2d;
-                        // vector<int> path1da;
-                        // vector<int> path1db;
-                        // path1da.push_back(Ax);
-                        // path1da.push_back(Ay);
-                        // path1db.push_back(Bx);
-                        // path1db.push_back(By);
+                        vector<vector<int> > path2d;
+                        vector<int> path1da;
+                        vector<int> path1db;
+                        
+                        path1da.push_back(Ax);
+                        path1da.push_back(Ay);
+                        path1db.push_back(Bx);
+                        path1db.push_back(By);
 
-                        // path2d.push_back(path1da);
-                        // path2d.push_back(path1db);
+                        path2d.push_back(path1da);
+                        path2d.push_back(path1db);
 
-                        // paths->path.push_back(path2d);
+                        paths.push_back(path2d);
 
-            pathCount++;
+                        pathCount++;
+
+                        pathCount++;
             } else {
                 printf("Did not print\n");
             }
