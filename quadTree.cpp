@@ -206,7 +206,7 @@ void collisionFreePaths()
     {
         
     
-        for (int j = i + 1; j < 5; j++)
+        for (int j = i + 1; j < 15; j++)
         {
             // for all pairs of free squares
             
