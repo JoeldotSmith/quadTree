@@ -215,6 +215,11 @@ void collisionFreePaths()
 
             printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
             
+            vector<vector<int>> path = {
+                {Ax, Ay}, 
+                {Bx, By}
+            }
+            
             paths->path.push_back({{Ax, Ay}, {Bx, By}});
             pathCount++;
 
