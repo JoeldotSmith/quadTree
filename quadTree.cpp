@@ -284,7 +284,7 @@ void collisionFreePaths()
                     // formula as per lecture slides
                     printf("not negativeFs or positiveFs");
 
-                    overOccupiedSquare = !((Ax > Ux && Bx > Ux) || (Ax < Rx && Bx < Rx) || (Ay > Uy && By > Uy) || (Ay < Ry && By < Ry));
+                    overOccupiedSquare = !((Ax > Sx && Bx > Sx) || (Ax < Tx && Bx < Tx) || (Ay > Sy && By > Sy) || (Ay < Ty && By < Ty));
                     if (!overOccupiedSquare){
                         printf(" --- passed\n");
                     }
@@ -292,12 +292,13 @@ void collisionFreePaths()
 
                     if (overOccupiedSquare){
                         // this is not a collision free path
-                        printf(" --- broke");
+                        printf(" --- broke\n");
                         break;
                     }
                 }
                 
             }
+            
             if (!overOccupiedSquare){ 
                         // a collision free path can be found so draw it
 
@@ -308,6 +309,8 @@ void collisionFreePaths()
                         printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
 
                         // TODO store these path  
+            } else {
+                printf("Did not print\n");
             }
             
         }
