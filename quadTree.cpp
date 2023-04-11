@@ -282,25 +282,25 @@ void collisionFreePaths()
 
                     // formula as per lecture slides
 
-                    overOccupiedSquare = true;//!((Ax > Sx && Bx > Sx) || (Ax < Tx && Bx < Tx) || (Ay > Sy && By > Sy) || (Ay < Ty && By < Ty));
+                    overOccupiedSquare = !((Ax > Sx && Bx > Sx) || (Ax < Tx && Bx < Tx) || (Ay > Sy && By > Sy) || (Ay < Ty && By < Ty));
 
                     if (overOccupiedSquare){
                         // this is not a collision free path
                         break;
                     }
                 }
-                
+                    
             }
             if (!overOccupiedSquare){ 
-                        // a collision free path can be found so draw it
+                            // a collision free path can be found so draw it
 
-                        LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
+                            LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
 
-                        int distance = sqrt(pow(Ax-Bx, 2)+pow(Ax-Bx, 2));
+                            int distance = sqrt(pow(Ax-Bx, 2)+pow(Ax-Bx, 2));
 
-                        printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
+                            printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
 
-                        // TODO store these path  
+                            // TODO store these path  
             }
             
         }
