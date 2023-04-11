@@ -290,6 +290,15 @@ void collisionFreePaths()
                     // formula as per lecture slides
                     
 
+                    Sx = occupiedSquares[k].locX+occupiedSquares[k].size/2;
+                    Sy = occupiedSquares[k].locY-occupiedSquares[k].size/2;
+
+                    Tx = occupiedSquares[k].locX-occupiedSquares[k].size/2;
+                    Ty = occupiedSquares[k].locY+occupiedSquares[k].size/2;
+
+                   
+                    
+
                     overOccupiedSquare = !((Ax > Sx && Bx > Sx) || (Ax < Tx && Bx < Tx) || (Ay > Sy && By > Sy) || (Ay < Ty && By < Ty));
                     printf("Ax = %i, Ay = %i, Bx = %i, By = %i, Sx = %i, Sy = %i, Tx = %i, Ty = %i\n", Ax, Ay, Bx, By, Sx, Sy, Tx, Ty);
 
