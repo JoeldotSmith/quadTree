@@ -189,6 +189,16 @@ void QuadTree(int x, int y, int size)
         QuadTree(x, y + s2, s2);
         QuadTree(x + s2, y + s2, s2);
     }
+    for (int i = 0; i < freeSquareCount; i++){
+        if (freeSquare[i].size > 4){
+            int locx = freeSquare[i].locX;
+            int locy = freeSquare[i].locY;
+
+            printf("FreeSquare n(%i), locx = %i locy = %i\n", i, locx, locy);
+        }
+        
+    }
+    
 }
 
 /*
