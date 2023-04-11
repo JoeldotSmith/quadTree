@@ -202,7 +202,7 @@ void collisionFreePaths()
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
     for (int i = 0; i < freeSquareCount; i++)
     {
-        for (int j = i + 1; j < freeSquareCount; j++)
+        for (int j = i + 1; j < 5; j++)
         {
             // for all pairs of free squares
             
@@ -281,6 +281,7 @@ void collisionFreePaths()
                     // Get variables as needed for formula
 
                     // formula as per lecture slides
+                    printf("Ax = %i, Ay = %i, Bx = %i, By = %i, Sx = %i, Sy = %i, Tx = %i, Ty\n", Ax, Ay, Bx, By, Sx, Sy, Tx, Ty);
 
                     overOccupiedSquare = !((Ax > Sx && Bx > Sx) || (Ax < Tx && Bx < Tx) || (Ay > Sy && By > Sy) || (Ay < Ty && By < Ty));
 
