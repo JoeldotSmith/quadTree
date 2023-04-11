@@ -121,7 +121,7 @@ typedef struct Path
     // What info do we need here
     // Array of points?
 
-    std::vector<std::vector<std::vector<int>>> path; // < <ax, ay>, <bx, by> >
+    std::vector<std::vector<std::vector<int> > > path; // < <ax, ay>, <bx, by> >
 
 } Path;
 
@@ -200,7 +200,6 @@ Note uses variable names as per lecture slides
 void collisionFreePaths()
 {
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
-    paths->path = {};
 
     for (int i = 0; i < 2; i++){ // cheated this part next for loop should start at 0 not 2
         int j = i+1;
