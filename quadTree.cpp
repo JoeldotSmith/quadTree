@@ -213,6 +213,8 @@ void collisionFreePaths()
             Ay = freeSquare[i].locY;
             Bx = freeSquare[j].locX;
             By = freeSquare[j].locY;
+            int negativeFs = 0;
+            int positiveFs = 0;
 
             printf("Ax = %i, Ay = %i, Bx = %i, By = %i\n", Ax, Ay, Bx, By);
 
@@ -272,7 +274,7 @@ void collisionFreePaths()
                     positiveFs++;
                 }
 
-                
+            }    
 
                 if (negativeFs == 4 || positiveFs == 4)
                 {
@@ -297,7 +299,7 @@ void collisionFreePaths()
                     }
                 }
                     
-            }
+            
             if (!overOccupiedSquare){ 
                             // a collision free path can be found so draw it
                             printf("Draw\n");
