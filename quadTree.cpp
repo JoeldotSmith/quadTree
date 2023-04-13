@@ -4,6 +4,7 @@
 #include <vector>
 using std::vector; 
 #include <array>
+#include <string>
 
 #include "eyebot++.h"
 
@@ -154,8 +155,8 @@ void QuadTree(int x, int y, int size)
                 
     Square square;
     square.size = size;
-    square.locX = x+size/2;
-    square.locY = y+size/2;
+    square.locX = x+round(size/2);
+    square.locY = y+round(size/2);
     if(allFree==true)
         square.occupied = 0;
     else if (allOccupied==true) 
@@ -164,7 +165,7 @@ void QuadTree(int x, int y, int size)
     if (allFree)
     {
         // Experiment 1 print centre points
-        printf("Centre point: %d %d %d\n", x + (int)size / 2, y + (int)size / 2, size);
+        printf("Centre point: %d %d %d\n", square.locX, square.locY, size);
 
         // Store the free squares
         freeSquare[freeSquareCount] = square; // TODO
@@ -172,6 +173,9 @@ void QuadTree(int x, int y, int size)
 
         // Draw the square (with slight margins)
         LCDArea(y + 1, x + 1, y + size - 1, x + size - 2, GREEN, 0);
+        
+        // Draw a circle in all unoccupied areas
+        LCDCircle(square.locY,square.locX, square.size/5, GREEN, true);
     }
     else if (allOccupied)
     {
