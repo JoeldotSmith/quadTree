@@ -397,7 +397,7 @@ void printfImage(BYTE img)
         for (int j = 0; j < IMAGE_SIZE; j++)
         {
             // Both %d and %X works
-            printf("%d", *image);
+            printf("%d", image[i * IMAGE_SIZE + j]);
             
             
         }
@@ -433,7 +433,7 @@ int main()
             break;
         case KEY3:
             printf("\nExperiment 4\n---\n");
-            // driveToPoints();
+            driveToPoints();
             break;
         case KEY4:
             endSim = 1;
