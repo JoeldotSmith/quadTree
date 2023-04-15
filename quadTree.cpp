@@ -470,18 +470,22 @@ void driveToPoints(vector<Path> paths)
 
     //Get all nodes and information
     for (int i = 0; i < paths.size(); i++){
+
         // if already in the list of nodes skip
         for (int v = 0; v < listOfNodes.size(); v++){
             if ((paths.at(i).ax == listOfNodes.at(v).x) && (paths.at(i).ay == listOfNodes.at(v).y)){
                 break;
             }
         }
+
         Node newNode;
         newNode.x = paths.at(i).ax;
         newNode.y = paths.at(i).ay;
         newNode.dist = sqrt((endPoint.x-newNode.x)*(endPoint.x-newNode.x)+(endPoint.y-newNode.y)*(endPoint.y-newNode.y));
+
         // for each path connected to this node get next node location and distance to the node
         for (int j = 0; j< paths.size(); j++){
+
             // if path and node starting location is the same
             if ((paths.at(j).ax == newNode.x) && (paths.at(j).ay == newNode.y)){
                 vector<int> newPathCoords;
@@ -496,8 +500,11 @@ void driveToPoints(vector<Path> paths)
         listOfNodes.push_back(newNode);
 
     }
+
     // add end Node
     listOfNodes.push_back(endPoint);
+
+    // print list of nodes
     printf("List of Nodes:\n");
     for (int i = 0; i < listOfNodes.size() -1 ; i++){
         printf("(%i, %i)\n", listOfNodes.at(i).x, listOfNodes.at(i).y);
