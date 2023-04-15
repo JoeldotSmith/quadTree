@@ -393,16 +393,29 @@ void collisionFreePaths(vector<Path> &paths, int pathCount)
 }
 
 /*
-pass in image coordinate eg. {90, 90} and will return vector containing the actual coordinates in the world
+pass in image coordinate eg. {90, 90} and will return vector containing the actual coordinates in the world FOR X COORDS ONLY
 */
-int imageCoordToActualCoord(int value){ 
+int imageCoordToActualCoordX(int value){ 
+    return WORLD_SIZE*((value/IMAGE_SIZE));
+}
+/*
+pass in image coordinate eg. {90, 90} and will return vector containing the actual coordinates in the world FOR Y COORDS ONLY
+*/
+int imageCoordToActualCoordY(int value){ 
     return WORLD_SIZE*(1-(value/IMAGE_SIZE));
 }
 
 /*
-pass in actual coordinate eg. {90, 90} and will return vector containing the image coordinates for the image
+pass in actual coordinate eg. {90, 90} and will return vector containing the image coordinates for the image FOR X COORDS ONLY
 */
-int actualCoordtoImageCoord(int value){
+int actualCoordtoImageCoordX(int value){
+    return IMAGE_SIZE*((value/WORLD_SIZE));
+    
+}
+/*
+pass in actual coordinate eg. {90, 90} and will return vector containing the image coordinates for the image FOR Y COORDS ONLY
+*/
+int actualCoordtoImageCoordY(int value){
     return IMAGE_SIZE*(1-(value/WORLD_SIZE));
     
 }
@@ -410,15 +423,6 @@ int actualCoordtoImageCoord(int value){
 
 void driveToPoints(vector<Path> paths)
 {   
-    int startX = 550;
-    int startY = 3500;
-    int goalX = 3500;
-    int goalY = 400;
-    vector<vector<int> > a;
-    vector<vector<int> > b;
-    vector<int> dist;
-    bool inList;
-
     typedef struct Node
     {
         int x; //x loc
@@ -427,6 +431,22 @@ void driveToPoints(vector<Path> paths)
         vector<vector<int> > nodeLocations;
         vector<int> dToOtherNodes; // distance from this node to other nodes in the same order as nodes are put in
     } Node;
+
+
+    int startX = 550;
+    int startY = 3500;
+    int goalX = 3500;
+    int goalY = 400;
+    int imageStartX = imageCoordToActualCoordX(startX);
+    int imageStartY = imageCoordToActualCoordY(startY);
+    int imageEndX = imageCoordToActualCoordX(goalX);
+    int imageEndY = imageCoordToActualCoordY(goalY);
+    vector<vector<int> > a;
+    vector<vector<int> > b;
+    vector<int> dist;
+    bool inList;
+
+    
 
 
     vector<Node> listOfNodes;
@@ -452,23 +472,21 @@ void driveToPoints(vector<Path> paths)
     }
 
     
-
+    // I think the start and end points should be the first and last node and then just drive to start point and finish point seperately 
 
     // Convert Start and end points into image coordinates
+    // Node startPoint;
+    // startPoint.x = actualCoordtoImageCoord(startX);
+    // startPoint.y = actualCoordtoImageCoord(startY);
     
+    // Node endPoint;
+    // endPoint.x = actualCoordtoImageCoord(goalX);
+    // endPoint.y = actualCoordtoImageCoord(goalY);
     
-    Node startPoint;
-    startPoint.x = actualCoordtoImageCoord(startX);
-    startPoint.y = actualCoordtoImageCoord(startY) - WORLD_SIZE/IMAGE_SIZE;
-    
-    Node endPoint;
-    endPoint.x = actualCoordtoImageCoord(goalX);
-    endPoint.y = actualCoordtoImageCoord(goalY) - WORLD_SIZE/IMAGE_SIZE;
-    
-    startPoint.dist = sqrt((endPoint.x-startPoint.x)*(endPoint.x-startPoint.x)+(endPoint.y-startPoint.y)*(endPoint.y-startPoint.y));
-    endPoint.dist = 0;
-    // add start Node
-    listOfNodes.push_back(startPoint);
+    // startPoint.dist = sqrt((endPoint.x-startPoint.x)*(endPoint.x-startPoint.x)+(endPoint.y-startPoint.y)*(endPoint.y-startPoint.y));
+    // endPoint.dist = 0;
+    // // add start Node
+    // listOfNodes.push_back(startPoint);
     
 
     //Get all nodes and information
@@ -486,7 +504,7 @@ void driveToPoints(vector<Path> paths)
             Node newNode;
             newNode.x = paths.at(i).ax;
             newNode.y = paths.at(i).ay;
-            newNode.dist = sqrt((endPoint.x-newNode.x)*(endPoint.x-newNode.x)+(endPoint.y-newNode.y)*(endPoint.y-newNode.y));
+            newNode.dist = sqrt((imageEndX-newNode.x)*(imageEndX-newNode.x)+(imageEndY-newNode.y)*(imageEndY-newNode.y));
 
             // for each path connected to this node get next node location and distance to the node
             for (int j = 0; j< paths.size(); j++){
@@ -509,7 +527,7 @@ void driveToPoints(vector<Path> paths)
     }
 
     // add end Node
-    listOfNodes.push_back(endPoint);
+    // listOfNodes.push_back(endPoint);
 
     // print list of nodes
     printf("List of Nodes:\n");
