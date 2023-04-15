@@ -426,15 +426,18 @@ void driveToPoints(vector<Path> paths)
     vector<vector<int> > b;
     vector<int> dist;
 
-    typedef struct Point
+    typedef struct Node
     {
-        int x;
-        int y;
-        int dist;
-    } Point;
+        int x; //x loc
+        int y; //y loc
+        int dist; // distance to goal (needed for A*)
+        int dToOtherNodes[]; // distance from this node to other nodes in the same order as nodes are put in
+    } Node;
 
-    vector<Point>
-        optPath;
+
+    vector<Node> listOfNodes;
+    vector<Node> optPath;
+    
 
     for (unsigned int i = 0; i < paths.size(); i++)
     {
@@ -453,14 +456,18 @@ void driveToPoints(vector<Path> paths)
         b.push_back(bCombiner);
         dist.push_back(paths.at(i).dist);
     }
-
     int startX = 550;
     int startY = 3500;
-    Point startPoint;
-    startPoint.x = startX;
-    startPoint.y = startY;
+    vector<int> startXY;
+    startXY.push_back(startX);
+    startXY.push_back(startY);
+    vector<int> iStartXY = actualCoordtoImageCoord(startXY);
+    
+    Node startPoint;
+    startPoint.x = iStartXY[0];
+    startPoint.y = iStartXY[1];
     startPoint.dist = 0;
-    optPath.push_back(startPoint);
+    listOfNodes.push_back(startPoint);
 
     int goalX = 3500;
     int goalY = 400;
