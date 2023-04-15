@@ -443,10 +443,11 @@ void driveToPoints(vector<Path> paths)
     int goalY = 400;
     int imageStartX = IMAGE_SIZE*((startX/WORLD_SIZE));
     int imageStartY = IMAGE_SIZE*(1-(startY/WORLD_SIZE));
-    int imageEndX = IMAGE_SIZE*((goalX/WORLD_SIZE));
+    int imageEndX = 128*(1-(goalX/4000));
     int imageEndY = IMAGE_SIZE*(1-(goalY/WORLD_SIZE));
 
-    printf("Image end, = (%i, %i)\n\n", imageEndX, imageEndY);
+    printf("Image start point, = (%i, %i)\n", imageStartX, imageStartY);
+    printf("Image end point, = (%i, %i)\n\n", imageEndX, imageEndY);
     vector<vector<int> > a;
     vector<vector<int> > b;
     vector<int> dist;
