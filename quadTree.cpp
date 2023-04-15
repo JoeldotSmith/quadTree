@@ -476,6 +476,7 @@ int main()
 
     int pathCount = 0;
     vector<Path> paths;
+    VWSetPosition(400, 3500, 0); // eventually change x and y
 
     do
     {
