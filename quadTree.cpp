@@ -402,7 +402,9 @@ vector<int> imageCoordToActualCoord(vector<int> values){
     return aValues;
 }
 
-
+/*
+pass in actual coordinate eg. {90, 90} and will return vector containing the image coordinates for the image
+*/
 vector<int> actualCoordtoImageCoord(vector<int> values){
     int imageCoordX = IMAGE_SIZE*(1-(values[0]/WORLD_SIZE));
     int imageCoordY = IMAGE_SIZE*(1-(values[1]/WORLD_SIZE));
