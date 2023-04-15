@@ -568,6 +568,10 @@ void driveToPoints(vector<Path> paths)
     //***************************************************************************************************
 
     optPath = aStar(listOfNodes, listOfNodes.at(0));
+    printf("\nOptimal Path, Path size = %lu\n", optPath.size());
+    for (int i = 0; i < optPath.size(); i++){
+        printf("(%i, %i)\n", optPath.at(i).x, optPath.at(i).y);
+    }
 
     // drive along optimal path
     for (unsigned int i = 0; i < optPath.size() - 1; i++)
