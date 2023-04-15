@@ -441,6 +441,8 @@ void driveToPoints(vector<Path> paths)
     int imageStartY = imageCoordToActualCoordY(startY);
     int imageEndX = imageCoordToActualCoordX(goalX);
     int imageEndY = imageCoordToActualCoordY(goalY);
+
+    printf("Image end, = (%i, %i)\n\n", imageEndX, imageEndY);
     vector<vector<int> > a;
     vector<vector<int> > b;
     vector<int> dist;
@@ -531,7 +533,7 @@ void driveToPoints(vector<Path> paths)
 
     // print list of nodes
     printf("List of Nodes, List.size = %lu\n", listOfNodes.size());
-    printf("Num, (x, y),  distToEnd\n", listOfNodes.size());
+    printf("Num, (x, y),  distToEnd\n\n", listOfNodes.size());
 
     for (int i = 0; i < listOfNodes.size() ; i++){
         printf("%i, (%i, %i), %i, \n", i, listOfNodes.at(i).x, listOfNodes.at(i).y, listOfNodes.at(i).dist);
