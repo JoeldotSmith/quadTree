@@ -395,31 +395,17 @@ void collisionFreePaths(vector<Path> &paths, int pathCount)
 /*
 pass in image coordinate eg. {90, 90} and will return vector containing the actual coordinates in the world
 */
-vector<int> imageCoordToActualCoord(vector<int> values){ 
-    int actualCoordX = WORLD_SIZE*(1-(values[0]/IMAGE_SIZE));
-    int actualCoordY = WORLD_SIZE*(1-(values[1]/IMAGE_SIZE));
-    vector<int> aValues;
-    aValues.push_back(actualCoordX);
-    aValues.push_back(actualCoordY);
-    return aValues;
+int imageCoordToActualCoord(int value){ 
+    return round(WORLD_SIZE*(1-(value/IMAGE_SIZE)));
 }
 
 /*
 pass in actual coordinate eg. {90, 90} and will return vector containing the image coordinates for the image
 */
-vector<int> actualCoordtoImageCoord(vector<int> values){
-    int imageCoordX = IMAGE_SIZE*(1-(values[0]/WORLD_SIZE));
-    int imageCoordY = IMAGE_SIZE*(1-(values[1]/WORLD_SIZE));
-    vector<int> aValues;
-    aValues.push_back(imageCoordX);
-    aValues.push_back(imageCoordY);
-    return aValues;
+int actualCoordtoImageCoord(int value){
+    return round(IMAGE_SIZE*(1-(value/WORLD_SIZE)));
+    
 }
-
-
-
-
-
 
 
 void driveToPoints(vector<Path> paths)
@@ -467,23 +453,15 @@ void driveToPoints(vector<Path> paths)
 
 
     // Convert Start and end points into image coordinates
-    vector<int> startXY;
-    startXY.push_back(startX);
-    startXY.push_back(startY);
-    vector<int> iStartXY = actualCoordtoImageCoord(startXY);
-
-    vector<int> endXY;
-    startXY.push_back(goalX);
-    startXY.push_back(goalY);
-    vector<int> iendXY = actualCoordtoImageCoord(endXY);
+    
     
     Node startPoint;
-    //startPoint.x = iStartXY[0];
-    //startPoint.y = iStartXY[1];
+    startPoint.x = actualCoordtoImageCoord(startX);
+    startPoint.y = actualCoordtoImageCoord(startY);
     
     Node endPoint;
-    //endPoint.x = iendXY[0];
-    //endPoint.y = iendXY[1];
+    endPoint.x = actualCoordtoImageCoord(goalX);
+    endPoint.y = actualCoordtoImageCoord(goalY);
     
     printf("2\n");
     startPoint.dist = sqrt((endPoint.x-startPoint.x)*(endPoint.x-startPoint.x)+(endPoint.y-startPoint.y)*(endPoint.y-startPoint.y));
@@ -524,7 +502,7 @@ void driveToPoints(vector<Path> paths)
     // add end Node
     listOfNodes.push_back(endPoint);
     printf("List of Nodes:\n");
-    for (int i = 0; i < listOfNodes.size(); i++){
+    for (int i = 0; i < listOfNodes.size() -1 ; i++){
         printf("(%i, %i)\n", listOfNodes.at(i).x, listOfNodes.at(i).y);
     }
 
