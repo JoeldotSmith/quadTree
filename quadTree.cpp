@@ -467,16 +467,21 @@ void driveToPoints(vector<Path> paths)
     endPoint.dist = 0;
     // add start Node
     listOfNodes.push_back(startPoint);
-
+    bool inList;
     //Get all nodes and information
     for (int i = 0; i < paths.size(); i++){
 
+        inList = false;
         // if already in the list of nodes skip
         for (int v = 0; v < listOfNodes.size(); v++){
             printf("Holding Node:(%i, %i), Checking Node:(%i, %i)\n", paths.at(i).ax, paths.at(i).ay, listOfNodes.at(v).x, listOfNodes.at(v).y);
             if ((paths.at(i).ax == listOfNodes.at(v).x) && (paths.at(i).ay == listOfNodes.at(v).y)){
+                inList = true;
                 break;
             }
+        }
+        if (inList){
+            break;
         }
 
         Node newNode;
