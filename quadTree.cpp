@@ -143,6 +143,16 @@ typedef struct Path
 
 } Path;
 
+typedef struct Node
+    {
+        int x; //x loc
+        int y; //y loc
+        int dist; // distance to goal (needed for A*)
+        vector<vector<int> > nodeLocations; // locations of all the connected nodes 
+        vector<int> dToOtherNodes; // distance from this node to other nodes in the same order as nodes are put in
+        // nodeLocations[i] is connected to dToOtherNodes[i]
+    } Node;
+
 int freeSquareCount = 0;
 Square freeSquare[IMAGE_SIZE];
 
@@ -392,49 +402,46 @@ void collisionFreePaths(vector<Path> &paths, int pathCount)
     }
 }
 
-/*
-pass in image coordinate eg. 90 and will return vector containing the actual coordinates in the world FOR X COORDS ONLY
-*/
-int imageCoordToActualCoordX(int value){ 
-    return WORLD_SIZE*((value/IMAGE_SIZE));
-}
-/*
-pass in image coordinate eg. 90 and will return vector containing the actual coordinates in the world FOR Y COORDS ONLY
-*/
-int imageCoordToActualCoordY(int value){ 
-    return WORLD_SIZE*(1-(value/IMAGE_SIZE));
-}
+vector<Node> aStar(vector<Node> listOfNodes, Node nodeWeAreOn){
+    vector<Node> bestRoute;
 
-/*
-pass in actual coordinate eg. 900 and will return vector containing the image coordinates for the image FOR X COORDS ONLY
-*/
-int actualCoordtoImageCoordX(int value){
-    int num = IMAGE_SIZE*((value/WORLD_SIZE));
-    printf("actualCoordtoImageCoordX returning: %i\n", num);
-    return num;
-    
-}
-/*
-pass in actual coordinate eg. 900 and will return vector containing the image coordinates for the image FOR Y COORDS ONLY
-*/
-int actualCoordtoImageCoordY(int value){
-    int num = IMAGE_SIZE*(1-(value/WORLD_SIZE));
-    printf("actualCoordtoImageCoordY returning: %i\n", num);
-    return num;
-    
+    while((nodeWeAreOn.x != listOfNodes.at(listOfNodes.size()-1).x) && (nodeWeAreOn.y != listOfNodes.at(listOfNodes.size()-1).y)){
+        int shortestPath = 10000;
+        int index;
+        for (int i = 0; i < nodeWeAreOn.dToOtherNodes.size(); i++){
+            if (nodeWeAreOn.dToOtherNodes.at(i) < shortestPath){
+                shortestPath = nodeWeAreOn.dToOtherNodes.at(i);
+                index = i;
+            }
+        }
+        if (shortestPath == 10000){
+            printf("aStar Failure no path smaller than 10000");
+            return bestRoute;
+        }
+        Node nextNode = listOfNodes.at(index);
+        vector<Node> newListOfNodes;
+        for (int j = 0; j < listOfNodes.size(); j++){
+            if (!((nextNode.x == listOfNodes.at(j).x) && (nextNode.y == listOfNodes.at(j).y))){
+                newListOfNodes.push_back(listOfNodes.at(j));
+            }
+        }
+        vector<Node> route = aStar(newListOfNodes, nextNode);
+
+        bestRoute.push_back(nextNode);
+    }
+
+    return bestRoute;
+
+
+
+
+
 }
 
 
 void driveToPoints(vector<Path> paths)
 {   
-    typedef struct Node
-    {
-        int x; //x loc
-        int y; //y loc
-        int dist; // distance to goal (needed for A*)
-        vector<vector<int> > nodeLocations;
-        vector<int> dToOtherNodes; // distance from this node to other nodes in the same order as nodes are put in
-    } Node;
+    
 
 
     int startX = 550;
@@ -543,7 +550,6 @@ void driveToPoints(vector<Path> paths)
     for (int i = 0; i < listOfNodes.size() ; i++){
         printf("%i, (%i, %i), %i \n", i, listOfNodes.at(i).x, listOfNodes.at(i).y, listOfNodes.at(i).dist);
     }
-    printf("does it make it this far?\n");
 
     //**************************************************************************************************
     // To-Do: calculate optimal path between start and goal
