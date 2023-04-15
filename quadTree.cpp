@@ -475,10 +475,8 @@ void driveToPoints(vector<Path> paths)
 
         // if already in the list of nodes skip
         for (int v = 0; v < listOfNodes.size(); v++){
-            printf("Holding Node:(%i, %i), Checking Node:(%i, %i)\n", paths.at(i).ax, paths.at(i).ay, listOfNodes.at(v).x, listOfNodes.at(v).y);
             if ((paths.at(i).ax == listOfNodes.at(v).x) && (paths.at(i).ay == listOfNodes.at(v).y)){
                 inList = true;
-                
             }
         }
         
@@ -513,9 +511,11 @@ void driveToPoints(vector<Path> paths)
 
     // print list of nodes
     printf("List of Nodes:\n");
-    for (int i = 0; i < listOfNodes.size() -1 ; i++){
+    printf("List of Nodes size: %i\n", listOfNodes.size());
+    for (int i = 0; i < listOfNodes.size() ; i++){
         printf("(%i, %i)\n", listOfNodes.at(i).x, listOfNodes.at(i).y);
     }
+    printf("does it make it this far?\n");
 
     //**************************************************************************************************
     // To-Do: calculate optimal path between start and goal
