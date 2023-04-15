@@ -459,6 +459,7 @@ void driveToPoints(vector<Path> paths)
         b.push_back(bCombiner);
         dist.push_back(paths.at(i).dist);
     }
+    printf("1\n");
     int startX = 550;
     int startY = 3500;
     int goalX = 3500;
@@ -483,7 +484,7 @@ void driveToPoints(vector<Path> paths)
     Node endPoint;
     endPoint.x = iendXY[0];
     endPoint.y = iendXY[1];
-
+    printf("2\n");
     startPoint.dist = sqrt((endPoint.x-startPoint.x)*(endPoint.x-startPoint.x)+(endPoint.y-startPoint.y)*(endPoint.y-startPoint.y));
     endPoint.dist = 0;
     // add start Node
@@ -491,6 +492,7 @@ void driveToPoints(vector<Path> paths)
 
     //Get all nodes and information
     for (int i = 0; i < paths.size(); i++){
+        printf("3\n");
         // if already in the list of nodes skip
         for (int v = 0; v < listOfNodes.size(); v++){
             if ((paths.at(i).ax == listOfNodes.at(v).x) && (paths.at(i).ay == listOfNodes.at(v).y)){
@@ -502,6 +504,7 @@ void driveToPoints(vector<Path> paths)
         newNode.y = paths.at(i).ay;
         newNode.dist = sqrt((endPoint.x-newNode.x)*(endPoint.x-newNode.x)+(endPoint.y-newNode.y)*(endPoint.y-newNode.y));
         // for each path connected to this node get next node location and distance to the node
+        printf("4\n");
         for (int j = 0; j< paths.size(); j++){
             // if path and node starting location is the same
             if ((paths.at(j).ax == newNode.x) && (paths.at(j).ay == newNode.y)){
