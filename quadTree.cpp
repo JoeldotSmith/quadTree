@@ -396,14 +396,14 @@ void collisionFreePaths(vector<Path> &paths, int pathCount)
 pass in image coordinate eg. {90, 90} and will return vector containing the actual coordinates in the world
 */
 int imageCoordToActualCoord(int value){ 
-    return round(WORLD_SIZE*(1-(value/IMAGE_SIZE)));
+    return WORLD_SIZE*(1-(value/IMAGE_SIZE));
 }
 
 /*
 pass in actual coordinate eg. {90, 90} and will return vector containing the image coordinates for the image
 */
 int actualCoordtoImageCoord(int value){
-    return round(IMAGE_SIZE*(1-(value/WORLD_SIZE)));
+    return IMAGE_SIZE*(1-(value/WORLD_SIZE));
     
 }
 
