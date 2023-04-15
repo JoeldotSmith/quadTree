@@ -17,6 +17,7 @@ char *fileName = "diagonal.pbm";
 int arr[IMAGE_SIZE][IMAGE_SIZE];
 // vector<vector<vector<int>>> paths;
 #define LINE_MAX 255
+#define SPEED 300
 
 void read_pbm_header(FILE *file, int *width, int *height)
 {
@@ -392,8 +393,60 @@ void collisionFreePaths(vector<Path> &paths, int pathCount)
 
 void driveToPoints(vector<Path> paths)
 {
-    for (unsigned int a = 0; a < paths.size(); a++)
+    vector<vector<int>> a;
+    vector<vector<int>> b;
+    vector<int> dist;
+
+    typedef struct Point
     {
+        int x;
+        int y;
+        int dist;
+    } Point;
+
+    vector<Point>
+        optPath;
+
+    for (unsigned int i = 0; i < paths.size(); i++)
+    {
+        a.push_back({paths.at(i).ax, paths.at(i).ay});
+        b.push_back({paths.at(i).bx, paths.at(i).by});
+        dist.push_back(paths.at(i).dist);
+    }
+
+    int startX = 550;
+    int startY = 3500;
+    Point startPoint;
+    startPoint.x = startX;
+    startPoint.y = startY;
+    startPoint.dist = 0;
+    optPath.push_back(startPoint);
+
+    int goalX = 3500;
+    int goalY = 400;
+
+    //**************************************************************************************************
+    // To-Do: calculate optimal path between start and goal
+    // save path on optPath vector
+    //***************************************************************************************************
+
+    // drive along optimal path
+    for (unsigned int i = 0; i < optPath.size() - 1; i++)
+    {
+        // calculate heading to next node
+        int x, y, phi;
+        VWGetPosition(&x, &y, &phi);
+        int theta = round(atan2(optPath.at(i).x - optPath.at(i + 1).x, optPath.at(i).y - optPath.at(i + 1).y) * 180.0 / M_PI);
+        if (theta > 180.0)
+            theta -= 360;
+
+        // turn towards node
+        int diff = round(theta - phi);
+        VWTurn(diff, 90); // check if direction is right
+        VWWait();
+
+        // drive to node
+        VWStraight(optPath.at(i + 1).dist, SPEED);
     }
 }
 
