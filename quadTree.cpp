@@ -405,26 +405,37 @@ void collisionFreePaths(vector<Path> &paths, int pathCount)
 vector<Node> aStar(vector<Node> listOfNodes, Node nodeWeAreOn){
     vector<Node> bestRoute;
 
+    
+    // while not at the goal
     while((nodeWeAreOn.x != listOfNodes.at(listOfNodes.size()-1).x) && (nodeWeAreOn.y != listOfNodes.at(listOfNodes.size()-1).y)){
         int shortestPath = 10000;
         int index;
+
+        // find shortest path
         for (int i = 0; i < nodeWeAreOn.dToOtherNodes.size(); i++){
             if (nodeWeAreOn.dToOtherNodes.at(i) < shortestPath){
-                shortestPath = nodeWeAreOn.dToOtherNodes.at(i);
+                shortestPath = nodeWeAreOn.dToOtherNodes.at(i) + nodeWeAreOn.dist;
                 index = i;
             }
         }
+
+        // error catch
         if (shortestPath == 10000){
             printf("aStar Failure no path smaller than 10000");
             return bestRoute;
         }
+
+
         Node nextNode = listOfNodes.at(index);
         vector<Node> newListOfNodes;
+
+        // get rid of node we next look at from list of nodes
         for (int j = 0; j < listOfNodes.size(); j++){
             if (!((nextNode.x == listOfNodes.at(j).x) && (nextNode.y == listOfNodes.at(j).y))){
                 newListOfNodes.push_back(listOfNodes.at(j));
             }
         }
+        // call recursively until finding the goal
         vector<Node> route = aStar(newListOfNodes, nextNode);
 
         bestRoute.push_back(nextNode);
@@ -555,6 +566,8 @@ void driveToPoints(vector<Path> paths)
     // To-Do: calculate optimal path between start and goal
     // save path on optPath vector
     //***************************************************************************************************
+
+    optPath = aStar(listOfNodes, listOfNodes.at(0));
 
     // drive along optimal path
     for (unsigned int i = 0; i < optPath.size() - 1; i++)
