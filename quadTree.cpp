@@ -418,7 +418,9 @@ int actualCoordtoImageCoordX(int value){
 pass in actual coordinate eg. 900 and will return vector containing the image coordinates for the image FOR Y COORDS ONLY
 */
 int actualCoordtoImageCoordY(int value){
-    return IMAGE_SIZE*(1-(value/WORLD_SIZE));
+    int num = IMAGE_SIZE*(1-(value/WORLD_SIZE));
+    printf("actualCoordtoImageCoordY returning: %i\n", num);
+    return num;
     
 }
 
@@ -439,10 +441,10 @@ void driveToPoints(vector<Path> paths)
     int startY = 3500;
     int goalX = 3500;
     int goalY = 400;
-    int imageStartX = imageCoordToActualCoordX(startX);
-    int imageStartY = imageCoordToActualCoordY(startY);
-    int imageEndX = imageCoordToActualCoordX(goalX);
-    int imageEndY = imageCoordToActualCoordY(goalY);
+    int imageStartX = IMAGE_SIZE*((startX/WORLD_SIZE));
+    int imageStartY = IMAGE_SIZE*(1-(startY/WORLD_SIZE));
+    int imageEndX = IMAGE_SIZE*((goalX/WORLD_SIZE));
+    int imageEndY = IMAGE_SIZE*(1-(goalY/WORLD_SIZE));
 
     printf("Image end, = (%i, %i)\n\n", imageEndX, imageEndY);
     vector<vector<int> > a;
@@ -538,7 +540,7 @@ void driveToPoints(vector<Path> paths)
     printf("Num, (x, y),  distToEnd\n\n", listOfNodes.size());
 
     for (int i = 0; i < listOfNodes.size() ; i++){
-        printf("%i, (%i, %i), %i, \n", i, listOfNodes.at(i).x, listOfNodes.at(i).y, listOfNodes.at(i).dist);
+        printf("%i, (%i, %i), %i \n", i, listOfNodes.at(i).x, listOfNodes.at(i).y, listOfNodes.at(i).dist);
     }
     printf("does it make it this far?\n");
 
