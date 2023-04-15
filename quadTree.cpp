@@ -409,10 +409,15 @@ int actualCoordtoImageCoord(int value){
 
 
 void driveToPoints(vector<Path> paths)
-{
+{   
+    int startX = 550;
+    int startY = 3500;
+    int goalX = 3500;
+    int goalY = 400;
     vector<vector<int> > a;
     vector<vector<int> > b;
     vector<int> dist;
+    bool inList;
 
     typedef struct Node
     {
@@ -446,10 +451,7 @@ void driveToPoints(vector<Path> paths)
         dist.push_back(paths.at(i).dist);
     }
 
-    int startX = 550;
-    int startY = 3500;
-    int goalX = 3500;
-    int goalY = 400;
+    
 
 
     // Convert Start and end points into image coordinates
@@ -457,17 +459,17 @@ void driveToPoints(vector<Path> paths)
     
     Node startPoint;
     startPoint.x = actualCoordtoImageCoord(startX);
-    startPoint.y = actualCoordtoImageCoord(startY);
+    startPoint.y = actualCoordtoImageCoord(startY) - WORLD_SIZE/IMAGE_SIZE;
     
     Node endPoint;
     endPoint.x = actualCoordtoImageCoord(goalX);
-    endPoint.y = actualCoordtoImageCoord(goalY);
+    endPoint.y = actualCoordtoImageCoord(goalY) - WORLD_SIZE/IMAGE_SIZE;
     
     startPoint.dist = sqrt((endPoint.x-startPoint.x)*(endPoint.x-startPoint.x)+(endPoint.y-startPoint.y)*(endPoint.y-startPoint.y));
     endPoint.dist = 0;
     // add start Node
     listOfNodes.push_back(startPoint);
-    bool inList;
+    
 
     //Get all nodes and information
     for (int i = 0; i < paths.size(); i++){
