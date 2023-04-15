@@ -530,10 +530,11 @@ void driveToPoints(vector<Path> paths)
     // listOfNodes.push_back(endPoint);
 
     // print list of nodes
-    printf("List of Nodes:\n");
-    printf("List of Nodes size: %i\n", listOfNodes.size());
+    printf("List of Nodes, List.size = %lu\n", listOfNodes.size());
+    printf("Num, (x, y),  distToEnd\n", listOfNodes.size());
+
     for (int i = 0; i < listOfNodes.size() ; i++){
-        printf("(%i, %i)\n", listOfNodes.at(i).x, listOfNodes.at(i).y);
+        printf("%i, (%i, %i), %i, \n", i, listOfNodes.at(i).x, listOfNodes.at(i).y, listOfNodes.at(i).dist);
     }
     printf("does it make it this far?\n");
 
