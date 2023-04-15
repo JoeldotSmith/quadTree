@@ -130,14 +130,15 @@ typedef struct Path
               // vector<vector<vector<int>>> path; // { {ax, ay}, {bx, by} }
     bool operator==(const Path &p) const
     {
-        if (p.ax == ax && p.ay == ay && p.bx == bx && p.by == by && p.dist == dist)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return (p.ax == ax && p.ay == ay && p.bx == bx && p.by == by && p.dist == dist);
+        // if (p.ax == ax && p.ay == ay && p.bx == bx && p.by == by && p.dist == dist)
+        // {
+        //     return true;
+        // }
+        // else
+        // {
+        //     return false;
+        // }
     }
 
 } Path;
@@ -390,6 +391,28 @@ void collisionFreePaths(vector<Path> &paths, int pathCount)
         }
     }
 }
+
+/*
+pass in image coordinate eg. {90, 90} and will return vector containing the actual coordinates in the world
+*/
+vector<int> imageCoordToActualCoord(vector<int> values){ 
+    int actualCoordX = WORLD_SIZE*(1-(values[0]/IMAGE_SIZE));
+    int actualCoordY = WORLD_SIZE*(1-(values[1]/IMAGE_SIZE));
+    vector<int> aValues = {actualCoordX, actualCoordY};
+    return aValues;
+}
+
+
+vector<int> actualCoordtoImageCoord(vector<int> values){
+    int imageCoordX = IMAGE_SIZE*(1-(values[0]/WORLD_SIZE));
+    int imageCoordY = IMAGE_SIZE*(1-(values[1]/WORLD_SIZE));
+    vector<int> aValues = {imageCoordX, imageCoordY};
+    return aValues;
+}
+
+
+
+
 
 void driveToPoints(vector<Path> paths)
 {
