@@ -468,42 +468,43 @@ void driveToPoints(vector<Path> paths)
     // add start Node
     listOfNodes.push_back(startPoint);
     bool inList;
+
     //Get all nodes and information
     for (int i = 0; i < paths.size(); i++){
-
         inList = false;
+
         // if already in the list of nodes skip
         for (int v = 0; v < listOfNodes.size(); v++){
             printf("Holding Node:(%i, %i), Checking Node:(%i, %i)\n", paths.at(i).ax, paths.at(i).ay, listOfNodes.at(v).x, listOfNodes.at(v).y);
             if ((paths.at(i).ax == listOfNodes.at(v).x) && (paths.at(i).ay == listOfNodes.at(v).y)){
                 inList = true;
-                break;
+                
             }
         }
-        if (inList){
-            break;
-        }
+        
+        if (!inList){
+            Node newNode;
+            newNode.x = paths.at(i).ax;
+            newNode.y = paths.at(i).ay;
+            newNode.dist = sqrt((endPoint.x-newNode.x)*(endPoint.x-newNode.x)+(endPoint.y-newNode.y)*(endPoint.y-newNode.y));
 
-        Node newNode;
-        newNode.x = paths.at(i).ax;
-        newNode.y = paths.at(i).ay;
-        newNode.dist = sqrt((endPoint.x-newNode.x)*(endPoint.x-newNode.x)+(endPoint.y-newNode.y)*(endPoint.y-newNode.y));
-
-        // for each path connected to this node get next node location and distance to the node
-        for (int j = 0; j< paths.size(); j++){
+            // for each path connected to this node get next node location and distance to the node
+            for (int j = 0; j< paths.size(); j++){
 
             // if path and node starting location is the same
-            if ((paths.at(j).ax == newNode.x) && (paths.at(j).ay == newNode.y)){
-                vector<int> newPathCoords;
-                newPathCoords.push_back(paths.at(j).ax);
-                newPathCoords.push_back(paths.at(j).ay);
-                newNode.nodeLocations.push_back(newPathCoords);
-                newNode.dToOtherNodes.push_back(paths.at(j).dist);
+                if ((paths.at(j).ax == newNode.x) && (paths.at(j).ay == newNode.y)){
+                    vector<int> newPathCoords;
+                    newPathCoords.push_back(paths.at(j).ax);
+                    newPathCoords.push_back(paths.at(j).ay);
+                    newNode.nodeLocations.push_back(newPathCoords);
+                    newNode.dToOtherNodes.push_back(paths.at(j).dist);
+                }
+
             }
 
+            listOfNodes.push_back(newNode);
         }
-
-        listOfNodes.push_back(newNode);
+        
 
     }
 
