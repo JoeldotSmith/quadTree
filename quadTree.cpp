@@ -2,7 +2,8 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
-using std::vector; 
+using std::vector;
+#include <algorithm>
 #include <array>
 #include <string>
 
@@ -14,7 +15,7 @@ using std::vector;
 BYTE *image;
 char *fileName = "diagonal.pbm";
 int arr[IMAGE_SIZE][IMAGE_SIZE];
-vector<vector<vector<int> > > paths;
+// vector<vector<vector<int>>> paths;
 #define LINE_MAX 255
 
 void read_pbm_header(FILE *file, int *width, int *height)
@@ -75,7 +76,6 @@ void read_pbm_data(FILE *file, int width, int height, BYTE *img)
             char c = ' ';
             while (c == ' ' || c == '\n' || c == '\r')
                 c = fgetc(file);
-                
 
             if (c != '0' && c != '1')
             {
@@ -121,10 +121,23 @@ typedef struct Square
 
 typedef struct Path
 {
-    // What info do we need here
-    // Array of points?
-
-    vector<vector<vector<int> > > path; // { {ax, ay}, {bx, by} }
+    int ax; // startpoint
+    int ay;
+    int bx; // endpoint
+    int by;
+    int dist; // dist
+              // vector<vector<vector<int>>> path; // { {ax, ay}, {bx, by} }
+    bool operator==(const Path &p) const
+    {
+        if (p.ax == ax && p.ay == ay && p.bx == bx && p.by == by && p.dist == dist)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 } Path;
 
@@ -134,8 +147,7 @@ Square freeSquare[IMAGE_SIZE];
 int occupiedSquareCount = 0;
 Square occupiedSquares[IMAGE_SIZE];
 
-int pathCount = 0;
-// Path *paths;
+//  Path *paths;
 
 /*
 Performs recursive quadtree division of image
@@ -143,23 +155,23 @@ and stores the free and occupied squares.
 */
 void QuadTree(int x, int y, int size)
 {
-    bool allFree = true;     
-    bool allOccupied = true; 
- 
-     for (int i = x; i < x + size; i++)
-         for (int j = y; j < y + size; j++)
-             if (image[i * IMAGE_SIZE + j])
-                 allFree = false; // at least 1 occ.
-             else
-                 allOccupied = false; // at least 1 free
-                
+    bool allFree = true;
+    bool allOccupied = true;
+
+    for (int i = x; i < x + size; i++)
+        for (int j = y; j < y + size; j++)
+            if (image[i * IMAGE_SIZE + j])
+                allFree = false; // at least 1 occ.
+            else
+                allOccupied = false; // at least 1 free
+
     Square square;
     square.size = size;
-    square.locX = x+round(size/2);
-    square.locY = y+round(size/2);
-    if(allFree==true)
+    square.locX = x + round(size / 2);
+    square.locY = y + round(size / 2);
+    if (allFree == true)
         square.occupied = 0;
-    else if (allOccupied==true) 
+    else if (allOccupied == true)
         square.occupied = 1;
 
     if (allFree)
@@ -168,14 +180,14 @@ void QuadTree(int x, int y, int size)
         printf("Centre point: %d %d %d\n", square.locX, square.locY, size);
 
         // Store the free squares
-        freeSquare[freeSquareCount] = square; // TODO
+        freeSquare[freeSquareCount] = square;
         freeSquareCount++;
 
         // Draw the square (with slight margins)
         LCDArea(y + 1, x + 1, y + size - 1, x + size - 2, GREEN, 0);
-        
+
         // Draw a circle in all unoccupied areas
-        LCDCircle(square.locY,square.locX, square.size/5, GREEN, true);
+        LCDCircle(square.locY, square.locX, square.size / 5, GREEN, true);
     }
     else if (allOccupied)
     {
@@ -203,130 +215,127 @@ between all pairs of free squares
 Note uses variable names as per lecture slides
 */
 
-void collisionFreePaths()
+void collisionFreePaths(vector<Path> &paths, int pathCount)
 {
     int Rx, Ry, Sx, Sy, Tx, Ty, Ux, Uy, Ax, Ay, Bx, By;
 
-    for (int i = 0; i < 2; i++){ // cheated this part next for loop should start at 0 not 2
-        int j = i+1;
-            Ax = freeSquare[i].locX;
-            Ay = freeSquare[i].locY;
-            Bx = freeSquare[j].locX;
-            By = freeSquare[j].locY;
+    for (int i = 0; i < 2; i++)
+    { // cheated this part next for loop should start at 0 not 2
+        int j = i + 1;
+        Ax = freeSquare[i].locX;
+        Ay = freeSquare[i].locY;
+        Bx = freeSquare[j].locX;
+        By = freeSquare[j].locY;
 
+        LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
 
-            LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
+        int distance = sqrt(pow(Ax - Bx, 2) + pow(Ay - By, 2));
 
-            int distance = sqrt(pow(Ax-Bx, 2)+pow(Ay-By, 2));
+        printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
 
-            printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
-            
-            
-            vector<vector<int> > path2d;
-            vector<int> path1da;
-            vector<int> path1db;
-            path1da.push_back(Ax);
-            path1da.push_back(Ay);
-            path1db.push_back(Bx);
-            path1db.push_back(By);
+        Path thisPath;
+        std::cout << "this Path - ";
+        thisPath.ax = Ax;
+        std::cout << "Ax -";
+        thisPath.ay = Ay;
+        std::cout << "Ay -";
+        thisPath.bx = Bx;
+        std::cout << "Bx -";
+        thisPath.by = By;
+        std::cout << "By -";
+        thisPath.dist = distance;
+        std::cout << "distance -";
 
-            path2d.push_back(path1da);
-            path2d.push_back(path1db);
-
-            paths.push_back(path2d);
-
-            pathCount++;
-
-            
-            
-            
-
-            // TODO store these path  
-        
-        
+        paths.push_back(thisPath);
+        printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
+        pathCount++;
     }
-
 
     for (int i = 2; i < freeSquareCount; i++)
     {
         for (int j = i + 1; j < freeSquareCount; j++)
         {
             // for all pairs of free squares
-            
+
             bool overOccupiedSquare = false;
 
             // Check all occupied squares to see if any intersect the path between two squares
 
             for (int k = 0; k < occupiedSquareCount; k++)
             {
-                if (freeSquare[i].size <= 8 || freeSquare[j].size <= 8){
+                if (freeSquare[i].size <= 8 || freeSquare[j].size <= 8)
+                {
                     break;
-
                 }
                 int negativeFs = 0;
                 int positiveFs = 0;
 
                 // TODO count negative and positive Fs as per algorithm
-                Rx = occupiedSquares[k].locX-occupiedSquares[k].size/2;
-                Ry = occupiedSquares[k].locY-occupiedSquares[k].size/2;
+                Rx = occupiedSquares[k].locX - occupiedSquares[k].size / 2;
+                Ry = occupiedSquares[k].locY - occupiedSquares[k].size / 2;
 
-                Sx = occupiedSquares[k].locX+occupiedSquares[k].size/2;
-                Sy = occupiedSquares[k].locY-occupiedSquares[k].size/2;
+                Sx = occupiedSquares[k].locX + occupiedSquares[k].size / 2;
+                Sy = occupiedSquares[k].locY - occupiedSquares[k].size / 2;
 
-                Tx = occupiedSquares[k].locX-occupiedSquares[k].size/2;
-                Ty = occupiedSquares[k].locY+occupiedSquares[k].size/2;
+                Tx = occupiedSquares[k].locX - occupiedSquares[k].size / 2;
+                Ty = occupiedSquares[k].locY + occupiedSquares[k].size / 2;
 
-                Ux = occupiedSquares[k].locX+occupiedSquares[k].size/2;
-                Uy = occupiedSquares[k].locY+occupiedSquares[k].size/2;
+                Ux = occupiedSquares[k].locX + occupiedSquares[k].size / 2;
+                Uy = occupiedSquares[k].locY + occupiedSquares[k].size / 2;
 
                 Ax = freeSquare[i].locX;
                 Ay = freeSquare[i].locY;
                 Bx = freeSquare[j].locX;
                 By = freeSquare[j].locY;
-                int distance = sqrt(pow(Ax-Bx, 2)+pow(Ay-By, 2));
-                if (distance > 10){
-                    printf("Distance too big\n");
+                int distance = sqrt(pow(Ax - Bx, 2) + pow(Ay - By, 2));
+                if (distance > 10)
+                {
+                    // printf("Distance too big\n");
                     break;
                 }
 
+                double f1 = (By - Ay) * Rx + (Ax - Bx) * Ry + (Bx * Ay - Ax * By);
+                double f2 = (By - Ay) * Sx + (Ax - Bx) * Sy + (Bx * Ay - Ax * By);
+                double f3 = (By - Ay) * Tx + (Ax - Bx) * Ty + (Bx * Ay - Ax * By);
+                double f4 = (By - Ay) * Ux + (Ax - Bx) * Uy + (Bx * Ay - Ax * By);
 
-                double f1 = (By - Ay)*Rx + (Ax-Bx)*Ry + (Bx*Ay-Ax*By);
-                double f2 = (By - Ay)*Sx + (Ax-Bx)*Sy + (Bx*Ay-Ax*By);
-                double f3 = (By - Ay)*Tx + (Ax-Bx)*Ty + (Bx*Ay-Ax*By);
-                double f4 = (By - Ay)*Ux + (Ax-Bx)*Uy + (Bx*Ay-Ax*By);
-
-                if (f1 < 0){
+                if (f1 < 0)
+                {
                     negativeFs++;
-                } else if (f1 != 0){
+                }
+                else if (f1 != 0)
+                {
                     positiveFs++;
                 }
-                if (f2 < 0){
+                if (f2 < 0)
+                {
                     negativeFs++;
-                } else if (f2 != 0){
+                }
+                else if (f2 != 0)
+                {
                     positiveFs++;
                 }
-                if (f3 < 0){
+                if (f3 < 0)
+                {
                     negativeFs++;
-                } else if (f3 != 0){
+                }
+                else if (f3 != 0)
+                {
                     positiveFs++;
                 }
-                if (f4 < 0){
+                if (f4 < 0)
+                {
                     negativeFs++;
-                } else if (f4 != 0){
+                }
+                else if (f4 != 0)
+                {
                     positiveFs++;
                 }
-                
-
-                
 
                 if (negativeFs == 4 || positiveFs == 4)
                 {
                     // All ponts above or below line
                     // no intersection, check the next occupied square
-                    
-
-                    
-                    
                     continue;
                 }
                 else
@@ -337,57 +346,55 @@ void collisionFreePaths()
                     printf("not negativeFs or positiveFs");
 
                     overOccupiedSquare = !((Ax > Sx && Bx > Sx) || (Ax < Tx && Bx < Tx) || (Ay > Sy && By > Sy) || (Ay < Ty && By < Ty));
-                    if (!overOccupiedSquare){
+                    if (!overOccupiedSquare)
+                    {
                         printf(" --- passed\n");
                     }
 
-
-                    if (overOccupiedSquare){
+                    if (overOccupiedSquare)
+                    {
                         // this is not a collision free path
                         printf(" --- broke\n");
                         break;
                     }
                 }
-                
             }
-            
-            if (!overOccupiedSquare){ 
-                        // a collision free path can be found so draw it
 
-                        LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
+            if (!overOccupiedSquare)
+            {
+                // a collision free path can be found so draw it
 
-                        int distance = sqrt(pow(Ax-Bx, 2)+pow(Ay-By, 2));
+                LCDLine(Ay, Ax, By, Bx, BLUE); // Draw it on screen
 
-                        printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
-                        
-                        vector<vector<int> > path2d;
-                        vector<int> path1da;
-                        vector<int> path1db;
-                        
-                        path1da.push_back(Ax);
-                        path1da.push_back(Ay);
-                        path1db.push_back(Bx);
-                        path1db.push_back(By);
+                int distance = sqrt(pow(Ax - Bx, 2) + pow(Ay - By, 2));
 
-                        path2d.push_back(path1da);
-                        path2d.push_back(path1db);
+                Path thisPath;
+                thisPath.ax = Ax;
+                thisPath.ay = Ay;
+                thisPath.bx = Bx;
+                thisPath.by = By;
+                thisPath.dist = distance;
 
-                        paths.push_back(path2d);
-
-                        pathCount++;
-
-                        pathCount++;
-            } else {
+                if (!(std::find(paths.begin(), paths.end(), thisPath) != paths.end()))
+                {
+                    paths.push_back(thisPath);
+                    printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
+                    pathCount++;
+                }
+            }
+            else
+            {
                 printf("Did not print\n");
             }
-            
         }
     }
 }
 
-void driveToPoints()
+void driveToPoints(vector<Path> paths)
 {
-    // TODO
+    for (unsigned int a = 0; a < paths.size(); a++)
+    {
+    }
 }
 
 void printfImage(BYTE img)
@@ -398,8 +405,6 @@ void printfImage(BYTE img)
         {
             // Both %d and %X works
             printf("%d", image[i * IMAGE_SIZE + j]);
-            
-            
         }
         printf("\n");
     }
@@ -416,6 +421,9 @@ int main()
     int endSim = 0; // boolean to end sim 0 = false, 1 = true
     LCDMenu("QUADTREE", "PATHS", "DRIVE", "EXIT");
 
+    int pathCount = 0;
+    vector<Path> paths;
+
     do
     {
         switch (KEYRead())
@@ -423,17 +431,16 @@ int main()
         case KEY1:
             printf("\nExperiment 1\n---\n");
             QuadTree(0, 0, 128);
-
             // prints the image using printf()
-             printfImage(*image);
+            printfImage(*image);
             break;
         case KEY2:
             printf("\nExperiment 2 and 3\n---\n");
-            collisionFreePaths();
+            collisionFreePaths(paths, pathCount);
             break;
         case KEY3:
             printf("\nExperiment 4\n---\n");
-            driveToPoints();
+            driveToPoints(paths);
             break;
         case KEY4:
             endSim = 1;
