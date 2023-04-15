@@ -393,27 +393,29 @@ void collisionFreePaths(vector<Path> &paths, int pathCount)
 }
 
 /*
-pass in image coordinate eg. {90, 90} and will return vector containing the actual coordinates in the world FOR X COORDS ONLY
+pass in image coordinate eg. 90 and will return vector containing the actual coordinates in the world FOR X COORDS ONLY
 */
 int imageCoordToActualCoordX(int value){ 
     return WORLD_SIZE*((value/IMAGE_SIZE));
 }
 /*
-pass in image coordinate eg. {90, 90} and will return vector containing the actual coordinates in the world FOR Y COORDS ONLY
+pass in image coordinate eg. 90 and will return vector containing the actual coordinates in the world FOR Y COORDS ONLY
 */
 int imageCoordToActualCoordY(int value){ 
     return WORLD_SIZE*(1-(value/IMAGE_SIZE));
 }
 
 /*
-pass in actual coordinate eg. {90, 90} and will return vector containing the image coordinates for the image FOR X COORDS ONLY
+pass in actual coordinate eg. 900 and will return vector containing the image coordinates for the image FOR X COORDS ONLY
 */
 int actualCoordtoImageCoordX(int value){
-    return IMAGE_SIZE*((value/WORLD_SIZE));
+    int num = IMAGE_SIZE*((value/WORLD_SIZE));
+    printf("actualCoordtoImageCoordX returning: %i\n", num);
+    return num;
     
 }
 /*
-pass in actual coordinate eg. {90, 90} and will return vector containing the image coordinates for the image FOR Y COORDS ONLY
+pass in actual coordinate eg. 900 and will return vector containing the image coordinates for the image FOR Y COORDS ONLY
 */
 int actualCoordtoImageCoordY(int value){
     return IMAGE_SIZE*(1-(value/WORLD_SIZE));
