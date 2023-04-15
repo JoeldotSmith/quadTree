@@ -458,6 +458,9 @@ void driveToPoints(vector<Path> paths)
     }
     int startX = 550;
     int startY = 3500;
+    int goalX = 3500;
+    int goalY = 400;
+
     vector<int> startXY;
     startXY.push_back(startX);
     startXY.push_back(startY);
@@ -466,12 +469,36 @@ void driveToPoints(vector<Path> paths)
     Node startPoint;
     startPoint.x = iStartXY[0];
     startPoint.y = iStartXY[1];
-    startPoint.dist = 0;
+
+    vector<int> endXY;
+    startXY.push_back(goalX);
+    startXY.push_back(goalY);
+    vector<int> iendXY = actualCoordtoImageCoord(endXY);
+    
+    Node endPoint;
+    endPoint.x = iendXY[0];
+    endPoint.y = iendXY[1];
+
+    startPoint.dist = sqrt((endPoint.x-startPoint.x)*(endPoint.x-startPoint.x)+(endPoint.y-startPoint.y)*(endPoint.y-startPoint.y));
+    endPoint.dist = 0;
     listOfNodes.push_back(startPoint);
 
-    int goalX = 3500;
-    int goalY = 400;
+    //Get all nodes and information
 
+    for (int i = 0; i < paths.size(); i++){
+        for (int v = 0; v < listOfNodes.size(); v++){
+            if ((paths.at(i).ax == listOfNodes.at(v).x) && (paths.at(i).ay == listOfNodes.at(v).y)){
+                break;
+            }
+        }
+        Node newNode;
+        newNode.x = paths.at(i).ax;
+        newNode.y = paths.at(i).ay;
+        newNode.dist = sqrt((endPoint.x-newNode.x)*(endPoint.x-newNode.x)+(endPoint.y-newNode.y)*(endPoint.y-newNode.y));
+        listOfNodes.push_back(newNode);
+
+    }
+    
     //**************************************************************************************************
     // To-Do: calculate optimal path between start and goal
     // save path on optPath vector
