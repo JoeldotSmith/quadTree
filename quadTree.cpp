@@ -398,7 +398,9 @@ pass in image coordinate eg. {90, 90} and will return vector containing the actu
 vector<int> imageCoordToActualCoord(vector<int> values){ 
     int actualCoordX = WORLD_SIZE*(1-(values[0]/IMAGE_SIZE));
     int actualCoordY = WORLD_SIZE*(1-(values[1]/IMAGE_SIZE));
-    vector<int> aValues = {actualCoordX, actualCoordY};
+    vector<int> aValues;
+    aValues.push_back(actualCoordX);
+    aValues.push_back(actualCoordY);
     return aValues;
 }
 
@@ -408,7 +410,9 @@ pass in actual coordinate eg. {90, 90} and will return vector containing the ima
 vector<int> actualCoordtoImageCoord(vector<int> values){
     int imageCoordX = IMAGE_SIZE*(1-(values[0]/WORLD_SIZE));
     int imageCoordY = IMAGE_SIZE*(1-(values[1]/WORLD_SIZE));
-    vector<int> aValues = {imageCoordX, imageCoordY};
+    vector<int> aValues;
+    aValues.push_back(imageCoordX);
+    aValues.push_back(imageCoordY);
     return aValues;
 }
 
@@ -418,8 +422,8 @@ vector<int> actualCoordtoImageCoord(vector<int> values){
 
 void driveToPoints(vector<Path> paths)
 {
-    vector<vector<int>> a;
-    vector<vector<int>> b;
+    vector<vector<int> > a;
+    vector<vector<int> > b;
     vector<int> dist;
 
     typedef struct Point
@@ -434,8 +438,19 @@ void driveToPoints(vector<Path> paths)
 
     for (unsigned int i = 0; i < paths.size(); i++)
     {
-        a.push_back({paths.at(i).ax, paths.at(i).ay});
-        b.push_back({paths.at(i).bx, paths.at(i).by});
+        vector<int> aCombiner, bCombiner;
+
+        aCombiner.clear();
+        bCombiner.clear();
+        aCombiner.push_back(paths.at(i).ax);
+        aCombiner.push_back(paths.at(i).ay);
+
+        bCombiner.push_back(paths.at(i).bx);
+        bCombiner.push_back(paths.at(i).by);
+
+
+        a.push_back(aCombiner);
+        b.push_back(bCombiner);
         dist.push_back(paths.at(i).dist);
     }
 
