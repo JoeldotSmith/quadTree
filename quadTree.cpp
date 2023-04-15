@@ -420,6 +420,8 @@ vector<int> actualCoordtoImageCoord(vector<int> values){
 
 
 
+
+
 void driveToPoints(vector<Path> paths)
 {
     vector<vector<int> > a;
@@ -431,7 +433,8 @@ void driveToPoints(vector<Path> paths)
         int x; //x loc
         int y; //y loc
         int dist; // distance to goal (needed for A*)
-        int dToOtherNodes[]; // distance from this node to other nodes in the same order as nodes are put in
+        vector<vector<int> > nodeLocations;
+        vector<int> dToOtherNodes; // distance from this node to other nodes in the same order as nodes are put in
     } Node;
 
 
@@ -461,6 +464,8 @@ void driveToPoints(vector<Path> paths)
     int goalX = 3500;
     int goalY = 400;
 
+
+    // Convert Start and end points into image coordinates
     vector<int> startXY;
     startXY.push_back(startX);
     startXY.push_back(startY);
@@ -481,11 +486,12 @@ void driveToPoints(vector<Path> paths)
 
     startPoint.dist = sqrt((endPoint.x-startPoint.x)*(endPoint.x-startPoint.x)+(endPoint.y-startPoint.y)*(endPoint.y-startPoint.y));
     endPoint.dist = 0;
+    // add start Node
     listOfNodes.push_back(startPoint);
 
     //Get all nodes and information
-
     for (int i = 0; i < paths.size(); i++){
+        // if already in the list of nodes skip
         for (int v = 0; v < listOfNodes.size(); v++){
             if ((paths.at(i).ax == listOfNodes.at(v).x) && (paths.at(i).ay == listOfNodes.at(v).y)){
                 break;
@@ -495,10 +501,29 @@ void driveToPoints(vector<Path> paths)
         newNode.x = paths.at(i).ax;
         newNode.y = paths.at(i).ay;
         newNode.dist = sqrt((endPoint.x-newNode.x)*(endPoint.x-newNode.x)+(endPoint.y-newNode.y)*(endPoint.y-newNode.y));
+        // for each path connected to this node get next node location and distance to the node
+        for (int j = 0; j< paths.size(); j++){
+            // if path and node starting location is the same
+            if ((paths.at(j).ax == newNode.x) && (paths.at(j).ay == newNode.y)){
+                vector<int> newPathCoords;
+                newPathCoords.push_back(paths.at(j).ax);
+                newPathCoords.push_back(paths.at(j).ay);
+                newNode.nodeLocations.push_back(newPathCoords);
+                newNode.dToOtherNodes.push_back(paths.at(j).dist);
+            }
+
+        }
+
         listOfNodes.push_back(newNode);
 
     }
-    
+    // add end Node
+    listOfNodes.push_back(endPoint);
+    printf("List of Nodes:\n");
+    for (int i = 0; i < listOfNodes.size(); i++){
+        printf("(%i, %i)\n", listOfNodes.at(i).x, listOfNodes.at(i).y);
+    }
+
     //**************************************************************************************************
     // To-Do: calculate optimal path between start and goal
     // save path on optPath vector
