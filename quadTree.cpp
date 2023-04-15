@@ -459,7 +459,7 @@ void driveToPoints(vector<Path> paths)
         b.push_back(bCombiner);
         dist.push_back(paths.at(i).dist);
     }
-    printf("1\n");
+
     int startX = 550;
     int startY = 3500;
     int goalX = 3500;
@@ -471,19 +471,20 @@ void driveToPoints(vector<Path> paths)
     startXY.push_back(startX);
     startXY.push_back(startY);
     vector<int> iStartXY = actualCoordtoImageCoord(startXY);
-    
-    Node startPoint;
-    startPoint.x = iStartXY[0];
-    startPoint.y = iStartXY[1];
 
     vector<int> endXY;
     startXY.push_back(goalX);
     startXY.push_back(goalY);
     vector<int> iendXY = actualCoordtoImageCoord(endXY);
     
+    Node startPoint;
+    //startPoint.x = iStartXY[0];
+    //startPoint.y = iStartXY[1];
+    
     Node endPoint;
-    endPoint.x = iendXY[0];
-    endPoint.y = iendXY[1];
+    //endPoint.x = iendXY[0];
+    //endPoint.y = iendXY[1];
+    
     printf("2\n");
     startPoint.dist = sqrt((endPoint.x-startPoint.x)*(endPoint.x-startPoint.x)+(endPoint.y-startPoint.y)*(endPoint.y-startPoint.y));
     endPoint.dist = 0;
