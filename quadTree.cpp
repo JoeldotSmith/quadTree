@@ -473,6 +473,7 @@ void driveToPoints(vector<Path> paths)
 
         // if already in the list of nodes skip
         for (int v = 0; v < listOfNodes.size(); v++){
+            printf("Holding Node:(%i, %i), Checking Node:(%i, %i)\n", paths.at(i).ax, paths.at(i).ay, listOfNodes.at(v).x, listOfNodes.at(v).y);
             if ((paths.at(i).ax == listOfNodes.at(v).x) && (paths.at(i).ay == listOfNodes.at(v).y)){
                 break;
             }
