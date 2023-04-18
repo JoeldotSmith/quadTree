@@ -127,39 +127,30 @@ typedef struct Path
     int bx; // endpoint
     int by;
     int dist; // dist
-              // vector<vector<vector<int>>> path; // { {ax, ay}, {bx, by} }
+
     bool operator==(const Path &p) const
     {
         return (p.ax == ax && p.ay == ay && p.bx == bx && p.by == by && p.dist == dist);
-        // if (p.ax == ax && p.ay == ay && p.bx == bx && p.by == by && p.dist == dist)
-        // {
-        //     return true;
-        // }
-        // else
-        // {
-        //     return false;
-        // }
     }
 
 } Path;
 
 typedef struct Node
-    {
-        int x; //x loc
-        int y; //y loc
-        int dist; // distance to goal (needed for A*)
-        vector<vector<int> > nodeLocations; // locations of all the connected nodes 
-        vector<int> dToOtherNodes; // distance from this node to other nodes in the same order as nodes are put in
-        // nodeLocations[i] is connected to dToOtherNodes[i]
-    } Node;
+{
+    int idx;  // node index
+    int x;    // x loc
+    int y;    // y loc
+    int dist; // distance to goal (needed for A*)
+    // vector<vector<int>> nodeLocations; // ? locations of all the connected nodes
+    // vector<int> dToOtherNodes;         // ? distance from this node to other nodes in the same order as nodes are put in
+    //  nodeLocations[i] is connected to dToOtherNodes[i]
+} Node;
 
 int freeSquareCount = 0;
 Square freeSquare[IMAGE_SIZE];
 
 int occupiedSquareCount = 0;
 Square occupiedSquares[IMAGE_SIZE];
-
-//  Path *paths;
 
 /*
 Performs recursive quadtree division of image
@@ -246,17 +237,11 @@ void collisionFreePaths(vector<Path> &paths, int pathCount)
         printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
 
         Path thisPath;
-        std::cout << "this Path - ";
         thisPath.ax = Ax;
-        std::cout << "Ax -";
         thisPath.ay = Ay;
-        std::cout << "Ay -";
         thisPath.bx = Bx;
-        std::cout << "Bx -";
         thisPath.by = By;
-        std::cout << "By -";
         thisPath.dist = distance;
-        std::cout << "distance -";
 
         paths.push_back(thisPath);
         printf("Distance From (%i, %i) -> (%i, %i): %i\n", Ax, Ay, Bx, By, distance);
@@ -402,153 +387,175 @@ void collisionFreePaths(vector<Path> &paths, int pathCount)
     }
 }
 
-vector<Node> aStar(vector<Node> listOfNodes, Node nodeWeAreOn){
+vector<Node> aStar(vector<Node> listOfNodes, vector<Path> paths)
+{
     vector<Node> bestRoute;
+    typedef struct nodeInfo
+    {
+        vector<int> nodeIndices;
+        int dist;   // sum of path lengths from start to last node in the list
+        int length; // dist + node value
 
-    
+    } nodeInfo;
+
+    vector<nodeInfo> visitedNodes;
+    int currNodeIdx = 0;
+    bool initializeNodes = true;
+    KEYWait(KEY3);
+
     // while not at the goal
-    while((nodeWeAreOn.x != listOfNodes.at(listOfNodes.size()-1).x) && (nodeWeAreOn.y != listOfNodes.at(listOfNodes.size()-1).y)){
-        int shortestPath = 10000;
-        int index;
-
+    while ((listOfNodes.at(currNodeIdx).x != listOfNodes.at(listOfNodes.size() - 1).x) && (listOfNodes.at(currNodeIdx).y != listOfNodes.at(listOfNodes.size() - 1).y))
+    {
         // find shortest path
-        for (int i = 0; i < nodeWeAreOn.dToOtherNodes.size(); i++){
-            if (nodeWeAreOn.dToOtherNodes.at(i) < shortestPath){
-                shortestPath = nodeWeAreOn.dToOtherNodes.at(i) + nodeWeAreOn.dist;
-                index = i;
+        for (size_t p = 0; p < paths.size(); p++) // loop over paths
+        {
+            // find all paths which start from the current node in the vector of paths
+            // calculate the path lengths to each node and save them in the vector of visited nodes
+            if (initializeNodes)
+            {
+                if (listOfNodes.at(currNodeIdx).x == paths.at(p).ax && listOfNodes.at(currNodeIdx).y == paths.at(p).ay)
+                {
+
+                    nodeInfo currentNode;
+                    for (size_t n = 0; n < listOfNodes.size(); n++)
+                    {
+                        if (listOfNodes.at(n).x == paths.at(p).bx && listOfNodes.at(n).y == paths.at(p).by)
+                        {
+                            currentNode.nodeIndices.push_back(n);
+                        }
+                    }
+                    //  index in vector listOfNodes where listOfNodes.x = paths.at(i).bx && listOfNodes.y = paths.at(i).by
+                    // if (currentNode.dist)
+                    currentNode.dist = paths.at(p).dist;
+                    currentNode.length = currentNode.dist + listOfNodes.at(currNodeIdx).dist;
+                    visitedNodes.push_back(currentNode);
+                }
+                initializeNodes = false;
+            }
+            else
+            {
+                if (listOfNodes.at(currNodeIdx).x == paths.at(p).ax && listOfNodes.at(currNodeIdx).y == paths.at(p).ay)
+                {
+                    nodeInfo currentNode;
+                    for (size_t v = 0; v < visitedNodes.size(); v++)
+                    {
+                        if (visitedNodes.at(v).nodeIndices.back() == currNodeIdx)
+                        {
+                            for (size_t n = 0; n < listOfNodes.size(); n++)
+                            {
+                                if (listOfNodes.at(n).x == paths.at(p).bx && listOfNodes.at(n).y == paths.at(p).by)
+                                {
+                                    visitedNodes.at(v).nodeIndices.push_back(n);
+                                    visitedNodes.at(v).dist += paths.at(p).dist;
+                                    visitedNodes.at(v).length = visitedNodes.at(v).dist + listOfNodes.at(currNodeIdx).dist;
+                                }
+                            }
+                        }
+                    }
+                    //  index in vector listOfNodes where listOfNodes.x = paths.at(i).bx && listOfNodes.y = paths.at(i).by
+                    // if (currentNode.dist)
+                    currentNode.dist = paths.at(p).dist;
+                    currentNode.length = paths.at(p).dist + listOfNodes.at(currNodeIdx).dist;
+                    visitedNodes.push_back(currentNode);
+
+                    std::cout << "Visited nodes { ";
+                    for (size_t i = 0; i < currentNode.nodeIndices.size(); i++)
+                    {
+                        std::cout << currentNode.nodeIndices.at(i) << " ";
+                    }
+                    std::cout << "}" << std::endl;
+                    std::cout << " -  dist " << currentNode.dist << ", length " << currentNode.length << std::endl;
+                }
+            }
+
+            // select the current node as the node with minimal length
+            // the current node will be further explored in the next iteration
+            int shortestPath = 10000;
+            for (size_t i = 0; i < visitedNodes.size(); i++)
+            {
+                if (visitedNodes.at(i).length < shortestPath)
+                {
+                    shortestPath = visitedNodes.at(i).length;
+                    currNodeIdx = visitedNodes.at(i).nodeIndices.back();
+
+                    if (currNodeIdx == listOfNodes.size())
+                    {
+                        // save best path
+                        for (size_t w = 0; w < visitedNodes.at(i).nodeIndices.size(); w++)
+                        {
+                            Node waypoint;
+                            waypoint.idx = visitedNodes.at(i).nodeIndices.at(w);
+                            waypoint.x = listOfNodes.at(waypoint.idx).x;
+                            waypoint.y = listOfNodes.at(waypoint.idx).y;
+                            LCDCircle(waypoint.y, waypoint.x, 10, BLUE, true);
+
+                            // find pathlength of waypoint
+                            for (size_t p = 0; p < paths.size(); p++)
+                            {
+                                if (waypoint.x == paths.at(p).ax && waypoint.y == paths.at(p).ay)
+                                {
+                                    waypoint.dist = paths.at(p).dist;
+                                }
+                            }
+                            bestRoute.push_back(waypoint);
+                        }
+                        break;
+                    }
+                }
             }
         }
-
-        // error catch
-        if (shortestPath == 10000){
-            printf("aStar Failure no path smaller than 10000");
-            return bestRoute;
-        }
-
-
-        Node nextNode = listOfNodes.at(index);
-        vector<Node> newListOfNodes;
-
-        // get rid of node we next look at from list of nodes
-        for (int j = 0; j < listOfNodes.size(); j++){
-            if (!((nextNode.x == listOfNodes.at(j).x) && (nextNode.y == listOfNodes.at(j).y))){
-                newListOfNodes.push_back(listOfNodes.at(j));
-            }
-        }
-        // call recursively until finding the goal
-        vector<Node> route = aStar(newListOfNodes, nextNode);
-
-        bestRoute.push_back(nextNode);
     }
 
     return bestRoute;
-
-
-
-
-
 }
 
-
 void driveToPoints(vector<Path> paths)
-{   
-    
-
-
+{
     int startX = 550;
     int startY = 3500;
     int goalX = 3500;
     int goalY = 400;
-    int imageStartX = IMAGE_SIZE*((startX/WORLD_SIZE));
-    int imageStartY = IMAGE_SIZE*(1-(startY/WORLD_SIZE));
-    int imageEndX = 128*(1-(goalX/4000));
-    int imageEndY = IMAGE_SIZE*(1-(goalY/WORLD_SIZE));
+    int imageStartX = IMAGE_SIZE * ((startX / WORLD_SIZE));
+    int imageStartY = IMAGE_SIZE * (1 - (startY / WORLD_SIZE));
+    int imageEndX = 128 * (1 - (goalX / 4000));
+    int imageEndY = IMAGE_SIZE * (1 - (goalY / WORLD_SIZE));
 
     printf("Image start point, = (%i, %i)\n", imageStartX, imageStartY);
     printf("Image end point, = (%i, %i)\n\n", imageEndX, imageEndY);
-    vector<vector<int> > a;
-    vector<vector<int> > b;
+    LCDCircle(imageStartY, imageStartX, 10, BLUE, true);
+    LCDCircle(imageEndY, imageEndX, 10, BLUE, true);
+    vector<vector<int>> a;
+    vector<vector<int>> b;
     vector<int> dist;
+
+    int nodeIdx = 0;
+    vector<Node> listOfNodes;
     bool inList;
 
-    
-
-
-    vector<Node> listOfNodes;
-    vector<Node> optPath;
-    
-
+    // Get all nodes and information
     for (unsigned int i = 0; i < paths.size(); i++)
     {
-        vector<int> aCombiner, bCombiner;
-
-        aCombiner.clear();
-        bCombiner.clear();
-        aCombiner.push_back(paths.at(i).ax);
-        aCombiner.push_back(paths.at(i).ay);
-
-        bCombiner.push_back(paths.at(i).bx);
-        bCombiner.push_back(paths.at(i).by);
-
-
-        a.push_back(aCombiner);
-        b.push_back(bCombiner);
-        dist.push_back(paths.at(i).dist);
-    }
-
-    
-    // I think the start and end points should be the first and last node and then just drive to start point and finish point seperately 
-
-    // Convert Start and end points into image coordinates
-    // Node startPoint;
-    // startPoint.x = actualCoordtoImageCoord(startX);
-    // startPoint.y = actualCoordtoImageCoord(startY);
-    
-    // Node endPoint;
-    // endPoint.x = actualCoordtoImageCoord(goalX);
-    // endPoint.y = actualCoordtoImageCoord(goalY);
-    
-    // startPoint.dist = sqrt((endPoint.x-startPoint.x)*(endPoint.x-startPoint.x)+(endPoint.y-startPoint.y)*(endPoint.y-startPoint.y));
-    // endPoint.dist = 0;
-    // // add start Node
-    // listOfNodes.push_back(startPoint);
-    
-
-    //Get all nodes and information
-    for (int i = 0; i < paths.size(); i++){
         inList = false;
 
         // if already in the list of nodes skip
-        for (int v = 0; v < listOfNodes.size(); v++){
-            if ((paths.at(i).ax == listOfNodes.at(v).x) && (paths.at(i).ay == listOfNodes.at(v).y)){
+        for (unsigned int v = 0; v < listOfNodes.size(); v++)
+        {
+            if ((paths.at(i).ax == listOfNodes.at(v).x) && (paths.at(i).ay == listOfNodes.at(v).y))
+            {
                 inList = true;
             }
         }
-        
-        if (!inList){
+
+        if (!inList)
+        {
             Node newNode;
+            newNode.idx = nodeIdx;
             newNode.x = paths.at(i).ax;
             newNode.y = paths.at(i).ay;
-            newNode.dist = sqrt((imageEndX-newNode.x)*(imageEndX-newNode.x)+(imageEndY-newNode.y)*(imageEndY-newNode.y));
-
-            // for each path connected to this node get next node location and distance to the node
-            for (int j = 0; j< paths.size(); j++){
-
-            // if path and node starting location is the same
-                if ((paths.at(j).ax == newNode.x) && (paths.at(j).ay == newNode.y)){
-                    vector<int> newPathCoords;
-                    newPathCoords.push_back(paths.at(j).ax);
-                    newPathCoords.push_back(paths.at(j).ay);
-                    newNode.nodeLocations.push_back(newPathCoords);
-                    newNode.dToOtherNodes.push_back(paths.at(j).dist);
-                }
-
-            }
-
+            newNode.dist = sqrt(pow(imageEndX - newNode.x, 2) + pow(imageEndY - newNode.y, 2));
             listOfNodes.push_back(newNode);
+            nodeIdx++;
         }
-        
-
     }
 
     // add end Node
@@ -556,20 +563,22 @@ void driveToPoints(vector<Path> paths)
 
     // print list of nodes
     printf("List of Nodes, List.size = %lu\n", listOfNodes.size());
-    printf("Num, (x, y),  distToEnd\n\n", listOfNodes.size());
+    // printf("Num, (x, y),  distToEnd\n\n", listOfNodes.size());
 
-    for (int i = 0; i < listOfNodes.size() ; i++){
-        printf("%i, (%i, %i), %i \n", i, listOfNodes.at(i).x, listOfNodes.at(i).y, listOfNodes.at(i).dist);
+    for (unsigned int i = 0; i < listOfNodes.size(); i++)
+    {
+        listOfNodes.at(i).idx = i;
+        printf("Num %i, (%i, %i), dist = %i \n", i, listOfNodes.at(i).x, listOfNodes.at(i).y, listOfNodes.at(i).dist);
     }
 
-    //**************************************************************************************************
-    // To-Do: calculate optimal path between start and goal
-    // save path on optPath vector
-    //***************************************************************************************************
+    //*******************************************************************
+    // calculate optimal path between start and goal
+    vector<Node> optPath = aStar(listOfNodes, paths); 
+    //*******************************************************************
 
-    optPath = aStar(listOfNodes, listOfNodes.at(0));
     printf("\nOptimal Path, Path size = %lu\n", optPath.size());
-    for (int i = 0; i < optPath.size(); i++){
+    for (unsigned int i = 0; i < optPath.size(); i++)
+    {
         printf("(%i, %i)\n", optPath.at(i).x, optPath.at(i).y);
     }
 
