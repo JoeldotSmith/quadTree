@@ -15,7 +15,7 @@ using std::vector;
 BYTE *image;
 char *fileName = "diagonal.pbm";
 int arr[IMAGE_SIZE][IMAGE_SIZE];
-// vector<vector<vector<int>>> paths;
+
 #define LINE_MAX 255
 #define SPEED 300
 
@@ -661,8 +661,8 @@ void driveToPoints(vector<Path> paths)
     for (unsigned int i = 0; i < optPath.size() - 1; i++)
     {
         // transfer coordinates
-        optPath.at(i).x = 4000 * (1 - optPath.at(i).x / 128);
-        optPath.at(i).y = 4000 * (optPath.at(i).y / 128);
+        optPath.at(i).x = WORLD_SIZE * (1 - optPath.at(i).x / IMAGE_SIZE);
+        optPath.at(i).y = WORLD_SIZE * (optPath.at(i).y / IMAGE_SIZE);
 
         // calculate heading to next node
         int x, y, phi;
