@@ -478,7 +478,7 @@ vector<Node> aStar(vector<Node> listOfNodes, vector<Path> paths)
                     shortestPath = visitedNodes.at(i).length;
                     currNodeIdx = visitedNodes.at(i).nodeIndices.back();
 
-                    if (currNodeIdx == listOfNodes.size())
+                    if (currNodeIdx == listOfNodes.size() - 1)
                     {
                         // save best path
                         for (size_t w = 0; w < visitedNodes.at(i).nodeIndices.size(); w++)
