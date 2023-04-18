@@ -401,117 +401,155 @@ vector<Node> aStar(vector<Node> listOfNodes, vector<Path> paths)
     vector<nodeInfo> visitedNodes;
     int currNodeIdx = 0;
     bool initializeNodes = true;
-    KEYWait(KEY3);
+    // KEYWait(KEY3);
 
     // while not at the goal
     while ((listOfNodes.at(currNodeIdx).x != listOfNodes.at(listOfNodes.size() - 1).x) && (listOfNodes.at(currNodeIdx).y != listOfNodes.at(listOfNodes.size() - 1).y))
     {
         // find shortest path
-        for (size_t p = 0; p < paths.size(); p++) // loop over paths
+
+        // find all paths which start from the current node in the vector of paths
+        // calculate the path lengths to each node and save them in the vector of visited nodes
+        if (initializeNodes)
         {
-            // find all paths which start from the current node in the vector of paths
-            // calculate the path lengths to each node and save them in the vector of visited nodes
-            if (initializeNodes)
+            for (size_t p = 0; p < paths.size(); p++) // loop over paths
             {
+
+                // printf("current node x = %i, y = %i\n", listOfNodes.at(currNodeIdx).x, listOfNodes.at(currNodeIdx).y);
                 if (listOfNodes.at(currNodeIdx).x == paths.at(p).ax && listOfNodes.at(currNodeIdx).y == paths.at(p).ay)
                 {
-
                     nodeInfo currentNode;
+                    printf("found node ax = %i, ay = %i\n", paths.at(p).ax, paths.at(p).ay);
+
                     for (size_t n = 0; n < listOfNodes.size(); n++)
                     {
                         if (listOfNodes.at(n).x == paths.at(p).bx && listOfNodes.at(n).y == paths.at(p).by)
                         {
+                            printf("found node at %i: bx = %i, by = %i\n", n, paths.at(p).bx, paths.at(p).by);
                             currentNode.nodeIndices.push_back(n);
                         }
                     }
                     //  index in vector listOfNodes where listOfNodes.x = paths.at(i).bx && listOfNodes.y = paths.at(i).by
                     // if (currentNode.dist)
+
                     currentNode.dist = paths.at(p).dist;
                     currentNode.length = currentNode.dist + listOfNodes.at(currNodeIdx).dist;
                     visitedNodes.push_back(currentNode);
                 }
                 initializeNodes = false;
             }
-            else
+
+            for (size_t v = 0; v < visitedNodes.size(); v++)
+            {
+                printf("%i nodes visited\n", visitedNodes.size());
+                std::cout << "Visited nodes { ";
+                for (size_t i = 0; i < visitedNodes.at(v).nodeIndices.size(); i++)
+                {
+                    std::cout << visitedNodes.at(v).nodeIndices.at(i) << " ";
+                }
+                std::cout << "}" << std::endl;
+                std::cout << " -  dist " << visitedNodes.at(v).dist << ", length " << visitedNodes.at(v).length << std::endl;
+            }
+        }
+        else
+        {
+            for (size_t p = 0; p < paths.size(); p++) // loop over paths
             {
                 if (listOfNodes.at(currNodeIdx).x == paths.at(p).ax && listOfNodes.at(currNodeIdx).y == paths.at(p).ay)
                 {
-                    nodeInfo currentNode;
+                    printf("I am unique\n");
+                    int deleteIndex;
+                    vector<nodeInfo> visitedNodesTemp;
+
+                    printf("found node ax = %i, ay = %i\n", paths.at(p).ax, paths.at(p).ay);
                     for (size_t v = 0; v < visitedNodes.size(); v++)
                     {
+                        printf("I am 2\n");
+                        printf("Last node in list: %i\n", visitedNodes.at(v).nodeIndices.back());
+                        printf("Current node : %i\n", currNodeIdx);
                         if (visitedNodes.at(v).nodeIndices.back() == currNodeIdx)
                         {
+                            printf("I am 3\n");
                             for (size_t n = 0; n < listOfNodes.size(); n++)
                             {
                                 if (listOfNodes.at(n).x == paths.at(p).bx && listOfNodes.at(n).y == paths.at(p).by)
                                 {
-                                    visitedNodes.at(v).nodeIndices.push_back(n);
-                                    visitedNodes.at(v).dist += paths.at(p).dist;
-                                    visitedNodes.at(v).length = visitedNodes.at(v).dist + listOfNodes.at(currNodeIdx).dist;
+                                    deleteIndex = v;
+                                    nodeInfo currentNode;
+                                    printf("found node bx = %i, by = %i\n", paths.at(p).bx, paths.at(p).by);
+                                    currentNode.nodeIndices = visitedNodes.at(v).nodeIndices;
+                                    currentNode.nodeIndices.push_back(n);
+                                    currentNode.dist = visitedNodes.at(v).dist + paths.at(p).dist;
+                                    currentNode.length = visitedNodes.at(v).dist + listOfNodes.at(currNodeIdx).dist;
+                                    visitedNodesTemp.push_back(currentNode);
                                 }
                             }
                         }
+                    }
+                    visitedNodes.erase(visitedNodes.begin() + deleteIndex);
+                    for (size_t i = 0; i < visitedNodesTemp.size(); i++)
+                    {
+                        visitedNodes.push_back(visitedNodesTemp.at(i));
                     }
                     //  index in vector listOfNodes where listOfNodes.x = paths.at(i).bx && listOfNodes.y = paths.at(i).by
                     // if (currentNode.dist)
-                    currentNode.dist = paths.at(p).dist;
-                    currentNode.length = paths.at(p).dist + listOfNodes.at(currNodeIdx).dist;
-                    visitedNodes.push_back(currentNode);
-
-                    std::cout << "Visited nodes { ";
-                    for (size_t i = 0; i < currentNode.nodeIndices.size(); i++)
-                    {
-                        std::cout << currentNode.nodeIndices.at(i) << " ";
-                    }
-                    std::cout << "}" << std::endl;
-                    std::cout << " -  dist " << currentNode.dist << ", length " << currentNode.length << std::endl;
                 }
             }
-
-            // select the current node as the node with minimal length
-            // the current node will be further explored in the next iteration
-            int shortestPath = 10000;
-            for (size_t i = 0; i < visitedNodes.size(); i++)
+            for (size_t v = 0; v < visitedNodes.size(); v++)
             {
-                printf("makes it here 0\n");
-                if (visitedNodes.at(i).length < shortestPath)
+                printf("%i nodes visited\n", visitedNodes.size());
+                std::cout << "Visited nodes { ";
+                for (size_t i = 0; i < visitedNodes.at(v).nodeIndices.size(); i++)
                 {
-                    printf("makes it here 1\n");
-                    shortestPath = visitedNodes.at(i).length;
-                    currNodeIdx = visitedNodes.at(i).nodeIndices.back();
+                    std::cout << visitedNodes.at(v).nodeIndices.at(i) << " ";
+                }
+                std::cout << "}" << std::endl;
+                std::cout << " -  dist " << visitedNodes.at(v).dist << ", length " << visitedNodes.at(v).length << std::endl;
+            }
+        }
 
-                    if (currNodeIdx == listOfNodes.size() - 1)
+        // select the current node as the node with minimal length
+        // the current node will be further explored in the next iteration
+        int shortestPath = 10000;
+        for (size_t i = 0; i < visitedNodes.size(); i++)
+        {
+            // printf("makes it here 0\n");
+            if (visitedNodes.at(i).length < shortestPath)
+            {
+                // printf("makes it here 1\n");
+                shortestPath = visitedNodes.at(i).length;
+                currNodeIdx = visitedNodes.at(i).nodeIndices.back();
+
+                if (currNodeIdx == listOfNodes.size() - 1)
+                {
+                    // save best path
+                    // printf("makes it here 2\n");
+                    for (size_t w = 0; w < visitedNodes.at(i).nodeIndices.size(); w++)
                     {
-                        // save best path
-                        printf("makes it here 2\n");
-                        for (size_t w = 0; w < visitedNodes.at(i).nodeIndices.size(); w++)
-                        {
-                            printf("makes it here 3\n");
-                            Node waypoint;
-                            waypoint.idx = visitedNodes.at(i).nodeIndices.at(w);
-                            waypoint.x = listOfNodes.at(waypoint.idx).x;
-                            waypoint.y = listOfNodes.at(waypoint.idx).y;
-                            LCDCircle(waypoint.y, waypoint.x, 10, BLUE, true);
+                        // printf("makes it here 3\n");
+                        Node waypoint;
+                        waypoint.idx = visitedNodes.at(i).nodeIndices.at(w);
+                        waypoint.x = listOfNodes.at(waypoint.idx).x;
+                        waypoint.y = listOfNodes.at(waypoint.idx).y;
+                        LCDCircle(waypoint.y, waypoint.x, 10, BLUE, true);
 
-                            // find pathlength of waypoint
-                            for (size_t p = 0; p < paths.size(); p++)
+                        // find pathlength of waypoint
+                        for (size_t p = 0; p < paths.size(); p++)
+                        {
+                            // printf("makes it here 4\n");
+                            if (waypoint.x == paths.at(p).ax && waypoint.y == paths.at(p).ay)
                             {
-                                printf("makes it here 4\n");
-                                if (waypoint.x == paths.at(p).ax && waypoint.y == paths.at(p).ay)
-                                {
-                                    waypoint.dist = paths.at(p).dist;
-                                }
+                                waypoint.dist = paths.at(p).dist;
                             }
-                            printf("makes it here 5\n");
-                            bestRoute.push_back(waypoint);
                         }
-                        break;
+                        // printf("makes it here 5\n");
+                        bestRoute.push_back(waypoint);
                     }
+                    break;
                 }
             }
         }
     }
-
     return bestRoute;
 }
 
@@ -530,8 +568,8 @@ void driveToPoints(vector<Path> paths)
     printf("Image end point, = (%i, %i)\n\n", imageEndX, imageEndY);
     LCDCircle(imageStartY, imageStartX, 10, BLUE, true);
     LCDCircle(imageEndY, imageEndX, 10, BLUE, true);
-    vector<vector<int> > a;
-    vector<vector<int> > b;
+    vector<vector<int>> a;
+    vector<vector<int>> b;
     vector<int> dist;
 
     int nodeIdx = 0;
@@ -579,7 +617,7 @@ void driveToPoints(vector<Path> paths)
 
     //*******************************************************************
     // calculate optimal path between start and goal
-    vector<Node> optPath = aStar(listOfNodes, paths); 
+    vector<Node> optPath = aStar(listOfNodes, paths);
     //*******************************************************************
 
     printf("\nOptimal Path, Path size = %lu\n", optPath.size());
