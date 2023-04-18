@@ -473,19 +473,20 @@ vector<Node> aStar(vector<Node> listOfNodes, vector<Path> paths)
             int shortestPath = 10000;
             for (size_t i = 0; i < visitedNodes.size(); i++)
             {
+                printf("makes it here 0\n");
                 if (visitedNodes.at(i).length < shortestPath)
                 {
-                    printf("makes it here 1");
+                    printf("makes it here 1\n");
                     shortestPath = visitedNodes.at(i).length;
                     currNodeIdx = visitedNodes.at(i).nodeIndices.back();
 
                     if (currNodeIdx == listOfNodes.size() - 1)
                     {
                         // save best path
-                        printf("makes it here 2");
+                        printf("makes it here 2\n");
                         for (size_t w = 0; w < visitedNodes.at(i).nodeIndices.size(); w++)
                         {
-                            printf("makes it here 3");
+                            printf("makes it here 3\n");
                             Node waypoint;
                             waypoint.idx = visitedNodes.at(i).nodeIndices.at(w);
                             waypoint.x = listOfNodes.at(waypoint.idx).x;
@@ -495,13 +496,13 @@ vector<Node> aStar(vector<Node> listOfNodes, vector<Path> paths)
                             // find pathlength of waypoint
                             for (size_t p = 0; p < paths.size(); p++)
                             {
-                                printf("makes it here 4");
+                                printf("makes it here 4\n");
                                 if (waypoint.x == paths.at(p).ax && waypoint.y == paths.at(p).ay)
                                 {
                                     waypoint.dist = paths.at(p).dist;
                                 }
                             }
-                            printf("makes it here 5");
+                            printf("makes it here 5\n");
                             bestRoute.push_back(waypoint);
                         }
                         break;
