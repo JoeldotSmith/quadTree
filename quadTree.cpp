@@ -478,7 +478,7 @@ vector<Node> aStar(vector<Node> listOfNodes, vector<Path> paths)
                 {
                     printf("makes it here 1\n");
                     shortestPath = visitedNodes.at(i).length;
-                    currNodeIdx = visitedNodes.at(i).nodeIndices.back();
+                    // currNodeIdx = visitedNodes.at(i).nodeIndices.back();
 
                     if (currNodeIdx == listOfNodes.size() - 1)
                     {
