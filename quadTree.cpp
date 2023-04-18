@@ -524,8 +524,8 @@ void driveToPoints(vector<Path> paths)
     printf("Image end point, = (%i, %i)\n\n", imageEndX, imageEndY);
     LCDCircle(imageStartY, imageStartX, 10, BLUE, true);
     LCDCircle(imageEndY, imageEndX, 10, BLUE, true);
-    vector<vector<int>> a;
-    vector<vector<int>> b;
+    vector<vector<int> > a;
+    vector<vector<int> > b;
     vector<int> dist;
 
     int nodeIdx = 0;
